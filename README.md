@@ -38,6 +38,8 @@ A comprehensive Visual Studio Code extension that provides full language support
 The extension automatically activates for files with these extensions:
 
 - `.s` - Standard assembly files
+- `.i` - Include files
+- `.inc` - Include files
 - `.asm` - Assembly files
 - `.68k` - M68K specific files
 - `.m68k` - M68K specific files
