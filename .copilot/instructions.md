@@ -188,7 +188,14 @@ This is a Visual Studio Code extension that provides comprehensive language supp
    - Maintain line endings
    - Preserve comment styles
 
-3. **Validation**
+3. **Command Line Usage**
+   - Use long-form options over short-form (e.g., --file instead of -f)
+   - Prefer explicit option names for clarity
+   - Document command options in comments when complex
+   - Maintain consistency in option style across scripts
+   - Consider tool-specific conventions when they differ
+
+4. **Validation**
    - Verify change was applied correctly
    - Check for unintended side effects
    - Run relevant linters
