@@ -25,7 +25,7 @@ A comprehensive Visual Studio Code extension that provides full language support
   - Section folding (`SECTION`, `BSS`, `DATA`, `TEXT`)
   - Macro definitions (`MACRO` to `ENDM`)
   - Conditional blocks (`IF` to `ENDIF`)
-  - Block comments (`/*` to  `*/`)
+  - Block comments (`/*` to `*/`)
   - Manual regions (`; #region` and `; #endregion`)
 - **Symbol Search**: Quickly find symbols using Ctrl+Shift+O
 
