@@ -118,3 +118,118 @@ This is a Visual Studio Code extension that provides comprehensive language supp
 - Cover edge cases in assembly syntax
 - Validate symbol resolution
 - Check performance with large files
+
+### Stable Changes
+
+#### General Principles
+
+1. **Deterministic Edits**
+   - Every change should be reproducible
+   - Use exact pattern matching over fuzzy matching
+   - Prefer tools over manual edits
+   - Document the exact transformation applied
+   - One logical change per commit
+
+2. **Minimal Impact**
+   - Change only what needs to be changed
+   - Preserve existing patterns and styles
+   - Keep original content where possible
+   - Avoid cascading modifications
+   - Respect existing formatting decisions
+
+3. **Predictable Locations**
+   - Make changes in well-defined locations
+   - Use absolute references (line numbers, exact matches)
+   - Include context in changes (3-5 lines before/after)
+   - Document the selection criteria
+   - Make changes atomic and isolated
+
+#### Examples by File Type
+
+1. **Markdown Files**
+
+   ```diff
+   - Long line that exceeds the limit and needs to be wrapped to fit
+   + Long line that exceeds the limit and needs to be
+   + wrapped to fit
+   ```
+
+2. **TypeScript Files**
+
+   ```diff
+   - function name(param: type) { /* old impl */ }
+   + function name(param: type) { /* new impl */ }
+   ```
+
+3. **JSON Files**
+
+   ```diff
+   {
+     "key": "old-value",
+   - "version": "1.0.0"
+   + "version": "1.0.1"
+     "other": "unchanged"
+   }
+   ```
+
+#### Implementation Guidelines
+
+1. **Finding Locations**
+   - Use exact string matches
+   - Include surrounding context
+   - Search for unique patterns
+   - Verify match uniqueness
+   - Document search criteria
+
+2. **Making Changes**
+   - Use replace_string_in_file for exact replacements
+   - Use insert_edit_into_file for partial changes
+   - Keep original indentation
+   - Maintain line endings
+   - Preserve comment styles
+
+3. **Validation**
+   - Verify change was applied correctly
+   - Check for unintended side effects
+   - Run relevant linters
+   - Test affected functionality
+   - Document verification steps
+
+### Version Control
+
+#### Commit Guidelines
+
+Follow Conventional Commits format:
+
+```bash
+type(scope): description
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- Types: feat, fix, docs, style, refactor, perf, test, build, ci
+- Scope: hover, syntax, parser, etc.
+- Description: present tense, concise, under 72 chars
+- Breaking changes: Add ! after type or BREAKING CHANGE in footer
+
+#### Release Process
+
+1. **Version Management**
+   - Use semantic versioning (MAJOR.MINOR.PATCH)
+   - Automated version bumping with `npm run release:[type]`
+   - Generate changelog from commits
+   - Create git tags automatically
+
+2. **Quality Checks**
+   - All tests pass
+   - No linting errors
+   - Documentation updated
+   - Examples reflect changes
+
+3. **Publication**
+   - Update version numbers
+   - Create release tag
+   - Generate release notes
+   - Update marketplace listing
