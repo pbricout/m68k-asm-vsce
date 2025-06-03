@@ -16,7 +16,11 @@ A comprehensive Visual Studio Code extension that provides full language support
 - **Go to Definition**: Jump to label and constant definitions
 - **Find All References**: Find all uses of labels and constants
 - **Rename Symbol**: Safely rename labels and user-defined symbols
-- **Hover Information**: Get detailed information about instructions, registers, and symbols
+- **Hover Information**: Get detailed information including:
+  - Instruction descriptions and syntax
+  - Cycle timing information for each instruction
+  - Register descriptions
+  - Symbol definitions
 
 ### 📁 Code Navigation
 
@@ -84,9 +88,12 @@ buffer: ds.b    BUFFER_SIZE
 
 Hover over any instruction to see:
 
-- Instruction description
-- Syntax information
-- Usage examples
+- Instruction description and syntax
+- Cycle timing information
+  - Base cycle counts
+  - Additional cycles for different addressing modes
+  - Timing variations for special cases
+- Example usage
 
 ### Go to Definition
 
