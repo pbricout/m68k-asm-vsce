@@ -30,7 +30,7 @@ A comprehensive Visual Studio Code extension that provides full language support
 - All addressing modes and size specifiers (.b, .w, .l)
 - Assembler directives (ORG, EQU, DC, DS, SECTION, etc.)
 - Macro definitions and usage
-- Multiple comment styles (; and /**/)
+- Multiple comment styles (; and /\*\*/)
 - Custom folding regions using `; #region` and `; #endregion`
 
 ## File Extensions

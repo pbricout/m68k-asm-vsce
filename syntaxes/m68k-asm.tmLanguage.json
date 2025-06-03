@@ -7,7 +7,7 @@
       "include": "#comments"
     },
     {
-      "include": "#labels"
+      "include": "#strings"
     },
     {
       "include": "#directives"
@@ -16,13 +16,13 @@
       "include": "#instructions"
     },
     {
+      "include": "#labels"
+    },
+    {
       "include": "#registers"
     },
     {
       "include": "#numbers"
-    },
-    {
-      "include": "#strings"
     },
     {
       "include": "#operators"
@@ -47,11 +47,14 @@
       "patterns": [
         {
           "name": "entity.name.function.m68k-asm",
-          "match": "^\\s*([a-zA-Z_][a-zA-Z0-9_]*):"
+          "match": "^\\s*([A-Za-z_][A-Za-z0-9_]*):"
         },
         {
           "name": "variable.other.m68k-asm",
-          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+          "match": "(?<=\\s)([A-Za-z_][A-Za-z0-9_]*)(?=\\s|$)",
+          "captures": {
+            "1": { "name": "entity.name.function.m68k-asm" }
+          }
         }
       ]
     },
