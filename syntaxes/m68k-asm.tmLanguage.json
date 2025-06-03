@@ -1,10 +1,18 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "M68K Assembly",
-  "scopeName": "source.m68k-asm",
-  "patterns": [
+  "scopeName": "source.m68k-asm",  "patterns": [
     {
       "include": "#comments"
+    },
+    {
+      "include": "#sections"
+    },
+    {
+      "include": "#macros"
+    },
+    {
+      "include": "#conditionals"
     },
     {
       "include": "#strings"
@@ -39,7 +47,67 @@
         {
           "name": "comment.block.m68k-asm",
           "begin": "/\\*",
-          "end": "\\*/"
+          "end": "\\*/",
+          "patterns": [
+            {
+              "name": "punctuation.definition.comment.begin.m68k-asm",
+              "match": "/\\*"
+            },
+            {
+              "name": "punctuation.definition.comment.end.m68k-asm",
+              "match": "\\*/"
+            }
+          ]
+        }
+      ]
+    },
+    "sections": {
+      "patterns": [
+        {
+          "name": "meta.section.m68k-asm",
+          "begin": "\\b(?i)(section|bss|data|text)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.section.begin.m68k-asm" }
+          },
+          "end": "(?=\\b(?i)(section|bss|data|text)\\b)",
+          "endCaptures": {
+            "1": { "name": "keyword.control.section.end.m68k-asm" }
+          }
+        }
+      ]
+    },
+    "macros": {
+      "patterns": [
+        {
+          "name": "meta.macro.m68k-asm",
+          "begin": "\\b(?i)(macro)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.macro.begin.m68k-asm" }
+          },
+          "end": "\\b(?i)(endm)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.macro.end.m68k-asm" }
+          }
+        }
+      ]
+    },
+    "conditionals": {
+      "patterns": [
+        {
+          "name": "meta.if.block.m68k-asm",
+          "begin": "\\b(?i)(if)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
+          },
+          "end": "\\b(?i)(endif)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.end.m68k-asm" }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
         }
       ]
     },

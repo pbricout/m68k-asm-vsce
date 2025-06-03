@@ -21,7 +21,12 @@ A comprehensive Visual Studio Code extension that provides full language support
 ### 📁 Code Navigation
 
 - **Document Outline**: View all labels, constants, macros, and sections in the outline
-- **Folding**: Support for region folding, macro folding, and comment block folding
+- **Code Folding**
+  - Section folding (`SECTION`, `BSS`, `DATA`, `TEXT`)
+  - Macro definitions (`MACRO` to `ENDM`)
+  - Conditional blocks (`IF` to `ENDIF`)
+  - Block comments (`/*` to  `*/`)
+  - Manual regions (`; #region` and `; #endregion`)
 - **Symbol Search**: Quickly find symbols using Ctrl+Shift+O
 
 ### 🛠️ Supported Features
