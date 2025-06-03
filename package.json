@@ -63,8 +63,8 @@
     }
   },  "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "compile": "tsc",
+    "watch": "tsc --watch",
     "package": "vsce package",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules",
     "lint": "npm run lint:md",
