@@ -80,6 +80,37 @@ This is a Visual Studio Code extension that provides comprehensive language supp
 - Use JSDoc comments for functions
 - Document complex regex patterns
 - Keep hover documentation concise
+- Follow markdownlint rules (DavidAnson.vscode-markdownlint):
+  - MD001: Headers must use proper incrementing levels
+  - MD003: Headers must use consistent style (ATX style with no closing #)
+  - MD004: Unordered lists must use consistent markers (-)
+  - MD009: No trailing spaces
+  - MD010: No hard tabs, use spaces
+  - MD012: Multiple blank lines should be collapsed into one
+  - MD013: Line length should be no more than 120 characters
+  - MD014: Dollar signs not allowed before shell commands
+  - MD018/MD019: Must have space after hash in headers
+  - MD022: Headers must be surrounded by blank lines
+  - MD023: Headers must start at the beginning of the line
+  - MD024: No duplicate header titles in the same section
+  - MD025: Only one top-level header
+  - MD026: No trailing punctuation in headers
+  - MD027: Multiple spaces after blockquote symbol
+  - MD029: Ordered list items should use incremental numbers
+  - MD030: Space after list markers
+  - MD031: Fenced code blocks should be surrounded by blank lines
+  - MD032: Lists should be surrounded by blank lines
+  - MD033: No inline HTML (except for allowed tags)
+  - MD034: Bare URLs should be enclosed in angles brackets
+  - MD037: Spaces around emphasis markers
+  - MD038: Spaces around code span markers
+  - MD039: Spaces inside link text
+  - MD040: Fenced code blocks should have a language specified
+  - MD041: First line should be top-level header
+  - MD047: Files should end with a single newline character
+- Use consistent documentation style across all markdown files
+- Keep commit messages and PR descriptions well-formatted according to these rules
+- Install markdownlint extension (DavidAnson.vscode-markdownlint) in development environment
 
 ### Testing
 
