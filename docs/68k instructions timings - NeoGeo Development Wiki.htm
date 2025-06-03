@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html class="client-js" lang="en" dir="ltr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>68k instructions timings - NeoGeo Development Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":false,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"cda30b715ed5e72b621194a3","wgCSPNonce":false,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"68k_instructions_timings","wgTitle":"68k instructions timings","wgCurRevisionId":6355,"wgRevisionId":6355,"wgArticleId":1242,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Base system","Code"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"68k_instructions_timings","wgRelevantArticleId":1242,"wgIsProbablyEditable":false,"wgRelevantPageIsProbablyEditable":false,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgVector2022PreviewPages":[
+]};RLSTATE={"site.styles":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@12s5i",function($,jQuery,require,module){mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});});});</script>
+<link rel="stylesheet" href="68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/load.css">
+<script async="" src="68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/load.php"></script>
+<style>
+@media screen {
+	.toctoggle{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;font-size:94%}}</style><meta name="ResourceLoaderDynamicStyles" content="">
+<link rel="stylesheet" href="68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/load_002.css">
+<meta name="generator" content="MediaWiki 1.40.0">
+<meta name="robots" content="max-image-preview:standard">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=1000">
+<link rel="icon" href="https://wiki.neogeodev.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://wiki.neogeodev.org/opensearch_desc.php" title="NeoGeo Development Wiki (en)">
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.neogeodev.org/api.php?action=rsd">
+<link rel="license" href="http://creativecommons.org/licenses/publicdomain/">
+<link rel="alternate" type="application/atom+xml" title="NeoGeo Development Wiki Atom feed" href="https://wiki.neogeodev.org/index.php?title=Special:RecentChanges&amp;feed=atom">
+</head>
+<body class="skin-vector-legacy mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-68k_instructions_timings rootpage-68k_instructions_timings skin-vector action-view"><div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice"></div>
+	<div class="mw-indicators">
+	</div>
+	<h1 id="firstHeading" class="firstHeading mw-first-heading"><span class="mw-page-title-main">68k instructions timings</span></h1>
+	<div id="bodyContent" class="vector-body">
+		<div id="siteSub" class="noprint">From NeoGeo Development Wiki</div>
+		<div id="contentSub"><div id="mw-content-subtitle"></div></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" class="mw-body-content mw-content-ltr" lang="en" dir="ltr"><div class="mw-parser-output"><p>Mirrored information from [<a rel="nofollow" class="external text" href="http://oldwww.nvg.ntnu.no/amiga/MC680x0_Sections/mc68000timing.HTML">oldwww.nvg.ntnu.no</a>]
+</p><p>The number of bus <b>r</b>ead and <b>w</b>rite cycles are shown in parenthesis as (r/w). Any other cycles are internal.
+</p><p>In the following tables, the headings have the following meanings:
+</p>
+<ul><li>An&nbsp;: Address register operand</li>
+<li>Dn&nbsp;: Data register operand</li>
+<li>ea&nbsp;: Operand specified by an effective address</li>
+<li>M&nbsp;: Memory effective address operand</li></ul>
+<p>To get the real execution time, multiply the total cycles count by 83.33ns (<a href="https://wiki.neogeodev.org/index.php?title=Clock" title="Clock">1/12MHz</a>). An example is given in each section.
+</p><p>The <a href="https://wiki.neogeodev.org/index.php?title=68k_interrupts" title="68k interrupts">vertical blank</a> lasts exactly 40 lines * 384 pixels * 2 cycles per pixel = 30720 cycles (2.56ms).
+</p><p>See <a href="https://wiki.neogeodev.org/index.php?title=Optimization" title="Optimization">optimization</a>.
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none"><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Effective_address_operand_calculation"><span class="tocnumber">1</span> <span class="toctext">Effective address operand calculation</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Move_instructions"><span class="tocnumber">2</span> <span class="toctext">Move instructions</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="#Byte_and_word"><span class="tocnumber">2.1</span> <span class="toctext">Byte and word</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#Long"><span class="tocnumber">2.2</span> <span class="toctext">Long</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-5"><a href="#Standard_instructions"><span class="tocnumber">3</span> <span class="toctext">Standard instructions</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#Immediate_instructions"><span class="tocnumber">4</span> <span class="toctext">Immediate instructions</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#Single_operand_instructions"><span class="tocnumber">5</span> <span class="toctext">Single operand instructions</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#Shift_and_rotate_instructions"><span class="tocnumber">6</span> <span class="toctext">Shift and rotate instructions</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#Bit_manipulation_instructions"><span class="tocnumber">7</span> <span class="toctext">Bit manipulation instructions</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#Conditional_instructions"><span class="tocnumber">8</span> <span class="toctext">Conditional instructions</span></a></li>
+<li class="toclevel-1 tocsection-11"><a href="#JMP,_JSR,_LEA,_PEA_and_MOVEM_instructions"><span class="tocnumber">9</span> <span class="toctext">JMP, JSR, LEA, PEA and MOVEM instructions</span></a></li>
+<li class="toclevel-1 tocsection-12"><a href="#Multi-precision_instructions"><span class="tocnumber">10</span> <span class="toctext">Multi-precision instructions</span></a></li>
+<li class="toclevel-1 tocsection-13"><a href="#Miscellaneous_instructions"><span class="tocnumber">11</span> <span class="toctext">Miscellaneous instructions</span></a></li>
+<li class="toclevel-1 tocsection-14"><a href="#Move_Peripheral_instructions"><span class="tocnumber">12</span> <span class="toctext">Move Peripheral instructions</span></a></li>
+<li class="toclevel-1 tocsection-15"><a href="#Exception_processing"><span class="tocnumber">13</span> <span class="toctext">Exception processing</span></a></li>
+</ul>
+</div>
+
+<h1><span class="mw-headline" id="Effective_address_operand_calculation">Effective address operand calculation</span></h1>
+<p>This table lists the number of clock periods required to compute an 
+instruction's effective address. It includes fetching of any extension 
+words, the address computation, and fetching of the memory operand.
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Syntax</th>
+<th>Adressing mode</th>
+<th>B,W</th>
+<th>L
+</th></tr>
+<tr>
+<td>Dn
+</td>
+<td>Data register direct
+</td>
+<td class="green">0(0/0)
+</td>
+<td class="green">0(0/0)
+</td></tr>
+<tr>
+<td>An
+</td>
+<td>Address register direct
+</td>
+<td class="green">0(0/0)
+</td>
+<td class="green">0(0/0)
+</td></tr>
+<tr>
+<td>(An)
+</td>
+<td>Address register indirect
+</td>
+<td class="green">4(1/0)
+</td>
+<td class="yellow">8(2/0)
+</td></tr>
+<tr>
+<td>(An)+
+</td>
+<td>Address register indirect, post inc.
+</td>
+<td class="green">4(1/0)
+</td>
+<td class="yellow">8(2/0)
+</td></tr>
+<tr>
+<td>-(An)
+</td>
+<td>Address register indirect, pre dec.
+</td>
+<td class="yellow">6(1/0)
+</td>
+<td class="orange">10(2/0)
+</td></tr>
+<tr>
+<td>d(An)
+</td>
+<td>Address register indirect, displacement
+</td>
+<td class="yellow">8(2/0)
+</td>
+<td class="orange">12(3/0)
+</td></tr>
+<tr>
+<td>d(An,ix)
+</td>
+<td>Address register indirect, index
+</td>
+<td class="orange">10(2/0)
+</td>
+<td class="red">14(3/0)
+</td></tr>
+<tr>
+<td>xxx.w
+</td>
+<td>Absolute short
+</td>
+<td class="yellow">8(2/0)
+</td>
+<td class="orange">12(3/0)
+</td></tr>
+<tr>
+<td>xxx.l
+</td>
+<td>Absolute long
+</td>
+<td class="orange">12(3/0)
+</td>
+<td class="red">16(4/0)
+</td></tr>
+<tr>
+<td>d(PC)
+</td>
+<td>PC with displacement
+</td>
+<td class="yellow">8(2/0)
+</td>
+<td class="orange">12(3/0)
+</td></tr>
+<tr>
+<td>d(PC,ix)
+</td>
+<td>PC with index
+</td>
+<td class="yellow">10(2/0)
+</td>
+<td class="red">14(3/0)
+</td></tr>
+<tr>
+<td>#xxx
+</td>
+<td>Immediate
+</td>
+<td class="green">4(1/0)
+</td>
+<td class="yellow">8(2/0)
+</td></tr></tbody></table>
+<p>Notes:
+</p>
+<ul><li>Pre-dec is slower than post-inc</li>
+<li>There are no write cycles involved in processing the effective address</li>
+<li>The size of the index register (ix) does not affect execution time</li></ul>
+<h1><span class="mw-headline" id="Move_instructions">Move instructions</span></h1>
+<p>These following two tables indicate the number of clock periods for 
+the move instruction. This data includes instruction fetch, operand 
+reads, and operand writes.
+</p>
+<h2><span class="mw-headline" id="Byte_and_word">Byte and word</span></h2>
+<p>Example: <b>move.b (a0)+,$10201D</b> (Byte (An)+ to xxx.L) takes 20 cycles.
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>&nbsp;</th>
+<th>Dn</th>
+<th>An</th>
+<th>(An)</th>
+<th>(An)+</th>
+<th>-(An)</th>
+<th>d(An)</th>
+<th>d(An,ix)</th>
+<th>xxx.W</th>
+<th>xxx.L
+</th></tr>
+<tr>
+<th>Dn
+</th>
+<td class="green">4(1/0)</td>
+<td class="green">4(1/0)</td>
+<td class="green">8(1/1)</td>
+<td class="green">8(1/1)
+</td>
+<td class="green">8(1/1)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">14(2/1)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">16(3/1)
+</td></tr>
+<tr>
+<th>An
+</th>
+<td class="green">4(1/0)</td>
+<td class="green">4(1/0)</td>
+<td class="green">8(1/1)</td>
+<td class="green">8(1/1)
+</td>
+<td class="green">8(1/1)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">14(2/1)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">16(3/1)
+</td></tr>
+<tr>
+<th>(An)
+</th>
+<td class="green">8(2/0)</td>
+<td class="green">8(2/0)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">12(2/1)
+</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="orange">18(3/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="orange">20(4/1)
+</td></tr>
+<tr>
+<th>(An)+
+</th>
+<td class="green">8(2/0)</td>
+<td class="green">8(2/0)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">12(2/1)
+</td>
+<td class="yellow">16(3/1)</td>
+<td class="orange">18(3/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="orange">20(4/1)
+</td></tr>
+<tr>
+<th>-(An)
+</th>
+<td class="green">10(2/0)</td>
+<td class="green">10(2/0)</td>
+<td class="yellow">14(2/1)</td>
+<td class="yellow">14(2/1)</td>
+<td class="yellow">14(2/1)
+</td>
+<td class="orange">18(3/1)</td>
+<td class="orange">20(4/1)</td>
+<td class="orange">18(3/1)</td>
+<td class="orange">22(4/1)
+</td></tr>
+<tr>
+<th>d(An)
+</th>
+<td class="yellow">12(3/0)</td>
+<td class="yellow">12(3/0)</td>
+<td class="yellow">16(3/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="yellow">16(3/1)
+</td>
+<td class="orange">20(4/1)</td>
+<td class="orange">22(4/1)</td>
+<td class="orange">20(4/1)</td>
+<td class="red">24(5/1)
+</td></tr>
+<tr>
+<th>d(An,ix)
+</th>
+<td class="yellow">14(3/0)</td>
+<td class="yellow">14(3/0)</td>
+<td class="orange">18(3/1)</td>
+<td class="orange">18(3/1)</td>
+<td class="orange">18(3/1)
+</td>
+<td class="orange">22(4/1)</td>
+<td class="red">24(4/1)</td>
+<td class="orange">22(4/1)</td>
+<td class="red">26(5/1)
+</td></tr>
+<tr>
+<th>xxx.W
+</th>
+<td class="yellow">12(3/0)</td>
+<td class="yellow">12(3/0)</td>
+<td class="yellow">16(3/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="yellow">16(3/1)
+</td>
+<td class="orange">20(4/1)</td>
+<td class="orange">22(4/1)</td>
+<td class="orange">20(4/1)</td>
+<td class="red">24(5/1)
+</td></tr>
+<tr>
+<th>xxx.L
+</th>
+<td class="yellow">16(4/0)</td>
+<td class="yellow">16(4/0)</td>
+<td class="orange">20(4/1)</td>
+<td class="orange">20(4/1)</td>
+<td class="orange">20(4/1)
+</td>
+<td class="red">24(5/1)</td>
+<td class="red">26(5/1)</td>
+<td class="red">24(5/1)</td>
+<td class="red">28(6/1)
+</td></tr>
+<tr>
+<th>d(PC)
+</th>
+<td class="yellow">12(3/0)</td>
+<td class="yellow">12(3/0)</td>
+<td class="yellow">16(3/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="yellow">16(3/1)
+</td>
+<td class="orange">20(4/1)</td>
+<td class="orange">22(4/1)</td>
+<td class="orange">20(4/1)</td>
+<td class="red">24(5/1)
+</td></tr>
+<tr>
+<th>d(PC,ix)
+</th>
+<td class="yellow">14(3/0)</td>
+<td class="yellow">14(3/0)</td>
+<td class="orange">18(3/1)</td>
+<td class="orange">18(3/1)</td>
+<td class="orange">18(3/1)
+</td>
+<td class="orange">22(4/1)</td>
+<td class="red">24(4/1)</td>
+<td class="orange">22(4/1)</td>
+<td class="red">26(5/1)
+</td></tr>
+<tr>
+<th>#xxx
+</th>
+<td class="green">8(2/0)</td>
+<td class="green">8(2/0)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">12(2/1)</td>
+<td class="yellow">12(2/1)
+</td>
+<td class="yellow">16(3/1)</td>
+<td class="orange">18(3/1)</td>
+<td class="yellow">16(3/1)</td>
+<td class="orange">20(4/1)
+</td></tr></tbody></table>
+<p>The size of the index register (ix) does not affect execution time.
+</p>
+<h2><span class="mw-headline" id="Long">Long</span></h2>
+<p>Example: <b>move.l $05012C,4(a1,d0)</b> (Long xxx.L to d(An,ix)) takes 34 cycles.
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>&nbsp;</th>
+<th>Dn</th>
+<th>An</th>
+<th>(An)</th>
+<th>(An)+</th>
+<th>-(An)</th>
+<th>d(An)</th>
+<th>d(An,ix)</th>
+<th>xxx.W</th>
+<th>xxx.L
+</th></tr>
+<tr>
+<th>Dn
+</th>
+<td class="green">4(1/0)</td>
+<td class="green">4(1/0)</td>
+<td class="green">12(1/2)</td>
+<td class="green">12(1/2)</td>
+<td class="green">12(1/2)
+</td>
+<td class="yellow">16(2/2)</td>
+<td class="yellow">18(2/2)</td>
+<td class="yellow">16(2/2)</td>
+<td class="yellow">20(3/2)
+</td></tr>
+<tr>
+<th>An
+</th>
+<td class="green">4(1/0)</td>
+<td class="green">4(1/0)</td>
+<td class="green">12(1/2)</td>
+<td class="green">12(1/2)</td>
+<td class="green">12(1/2)
+</td>
+<td class="yellow">16(2/2)</td>
+<td class="yellow">18(2/2)</td>
+<td class="yellow">16(2/2)</td>
+<td class="yellow">20(3/2)
+</td></tr>
+<tr>
+<th>(An)
+</th>
+<td class="green">12(3/0)</td>
+<td class="green">12(3/0)</td>
+<td class="yellow">20(3/2)</td>
+<td class="yellow">20(3/2)</td>
+<td class="yellow">20(3/2)
+</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">28(5/2)
+</td></tr>
+<tr>
+<th>(An)+
+</th>
+<td class="green">12(3/0)</td>
+<td class="green">12(3/0)</td>
+<td class="yellow">20(3/2)</td>
+<td class="yellow">20(3/2)</td>
+<td class="yellow">20(3/2)
+</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">28(5/2)
+</td></tr>
+<tr>
+<th>-(An)
+</th>
+<td class="yellow">14(3/0)</td>
+<td class="yellow">14(3/0)</td>
+<td class="orange">22(3/2)</td>
+<td class="orange">22(3/2)</td>
+<td class="orange">22(3/2)
+</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">28(4/2)</td>
+<td class="orange">26(4/2)</td>
+<td class="red">30(5/2)
+</td></tr>
+<tr>
+<th>d(An)
+</th>
+<td class="yellow">16(4/0)</td>
+<td class="yellow">16(4/0)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">24(4/2)
+</td>
+<td class="orange">28(5/2)</td>
+<td class="red">30(5/2)</td>
+<td class="orange">28(5/2)</td>
+<td class="red">32(6/2)
+</td></tr>
+<tr>
+<th>d(An,ix)
+</th>
+<td class="yellow">18(4/0)</td>
+<td class="yellow">18(4/0)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">26(4/2)
+</td>
+<td class="red">30(5/2)</td>
+<td class="red">32(5/2)</td>
+<td class="red">30(5/2)</td>
+<td class="red">34(6/2)
+</td></tr>
+<tr>
+<th>xxx.W
+</th>
+<td class="yellow">16(4/0)</td>
+<td class="yellow">16(4/0)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">24(4/2)
+</td>
+<td class="orange">28(5/2)</td>
+<td class="red">30(5/2)</td>
+<td class="orange">28(5/2)</td>
+<td class="red">32(6/2)
+</td></tr>
+<tr>
+<th>xxx.L
+</th>
+<td class="yellow">20(5/0)</td>
+<td class="yellow">20(5/0)</td>
+<td class="orange">28(5/2)</td>
+<td class="orange">28(5/2)</td>
+<td class="orange">28(5/2)
+</td>
+<td class="red">32(6/2)</td>
+<td class="red">34(6/2)</td>
+<td class="red">32(6/2)</td>
+<td class="red">36(7/2)
+</td></tr>
+<tr>
+<th>d(PC)
+</th>
+<td class="yellow">16(4/0)</td>
+<td class="yellow">16(4/0)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">24(4/2)
+</td>
+<td class="orange">28(5/2)</td>
+<td class="red">30(5/2)</td>
+<td class="orange">28(5/2)</td>
+<td class="red">32(5/2)
+</td></tr>
+<tr>
+<th>d(PC,ix)
+</th>
+<td class="yellow">18(4/0)</td>
+<td class="yellow">18(4/0)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">26(4/2)
+</td>
+<td class="red">30(5/2)</td>
+<td class="red">32(5/2)</td>
+<td class="red">30(5/2)</td>
+<td class="red">34(6/2)
+</td></tr>
+<tr>
+<th>#xxx
+</th>
+<td class="green">12(3/0)</td>
+<td class="green">12(3/0)</td>
+<td class="yellow">20(3/2)</td>
+<td class="yellow">20(3/2)</td>
+<td class="yellow">20(3/2)
+</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">26(4/2)</td>
+<td class="orange">24(4/2)</td>
+<td class="orange">28(5/2)
+</td></tr></tbody></table>
+<p>The size of the index register (ix) does not affect execution time.
+</p>
+<h1><span class="mw-headline" id="Standard_instructions">Standard instructions</span></h1>
+<p>Example: <b>add.w d3,a7</b> (Word ea Dn + An) takes 8 cycles.
+</p><p>The number of clock periods shown in this table indicates the 
+time required to perform the operations, store the results and read the 
+next instruction. The total number of clock periods must be added 
+respectively to those of the effective address calculation where 
+indicated (+).
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>&nbsp;</th>
+<th>Size</th>
+<th>&lt;ea&gt;,An *</th>
+<th>&lt;ea&gt;,Dn</th>
+<th>Dn,&lt;M&gt;
+</th></tr>
+<tr>
+<th rowspan="2">ADD
+</th>
+<td>B,W
+</td>
+<td class="orange">8(1/0)+</td>
+<td class="green">4(1/0)+</td>
+<td class="orange">8(1/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="yellow">6(1/0)+**</td>
+<td class="yellow">6(1/0)+**</td>
+<td class="red">12(1/2)+
+</td></tr>
+<tr>
+<th rowspan="2">AND
+</th>
+<td>B,W
+</td>
+<td>-</td>
+<td class="green">4(1/0)+</td>
+<td class="orange">8(1/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td>-</td>
+<td class="yellow">6(1/0)+**</td>
+<td class="red">12(1/2)+
+</td></tr>
+<tr>
+<th rowspan="2">CMP
+</th>
+<td>B,W
+</td>
+<td class="yellow">6(1/0)+</td>
+<td class="green">4(1/0)+</td>
+<td>-
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="yellow">6(1/0)+</td>
+<td class="yellow">6(1/0)+</td>
+<td>-
+</td></tr>
+<tr>
+<th>DIVS
+</th>
+<td>-</td>
+<td>-</td>
+<td class="red">158(1/0)+</td>
+<td>-
+</td></tr>
+<tr>
+<th>DIVU
+</th>
+<td>-</td>
+<td>-</td>
+<td class="red">140(1/0)+</td>
+<td>-
+</td></tr>
+<tr>
+<th rowspan="2">EOR
+</th>
+<td>B,W
+</td>
+<td>-</td>
+<td class="green">4(1/0) ***</td>
+<td class="orange">8(1/1) +
+</td></tr>
+<tr>
+<td>L
+</td>
+<td>-</td>
+<td class="orange">8(1/0) ***</td>
+<td class="red">12(1/2) +
+</td></tr>
+<tr>
+<th>MULS
+</th>
+<td>-</td>
+<td>-</td>
+<td class="red">70(1/0)+*</td>
+<td>-
+</td></tr>
+<tr>
+<th>MULU
+</th>
+<td>-</td>
+<td>-</td>
+<td class="red">70(1/0)+*</td>
+<td>-
+</td></tr>
+<tr>
+<th rowspan="2">OR
+</th>
+<td>B,W
+</td>
+<td>-</td>
+<td class="green">4(1/0) +**</td>
+<td class="orange">8(1/1) +
+</td></tr>
+<tr>
+<td>L
+</td>
+<td>-</td>
+<td class="yellow">6(1/0) +**</td>
+<td class="red">12(1/2) +
+</td></tr>
+<tr>
+<th rowspan="2">SUB
+</th>
+<td>B,W
+</td>
+<td class="orange">8(1/0)+</td>
+<td class="green">4(1/0)+</td>
+<td class="orange">8(1/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="yellow">6(1/0)+**</td>
+<td class="yellow">6(1/0)+**</td>
+<td class="red">12(1/2)+
+</td></tr></tbody></table>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>notes:	+ Add effective address calculation time
+	^ Word or long only
+	* Indicates maximum value
+       ** The base time of six clock periods is increased to eight		
+	  if the effective address mode is register direct or 
+	  immediate (effective address time should also be added)
+      *** Only available effective address mode is data register direct
+	  
+	DIVS,DIVU - The divide algorithm used by the MC68000 provides less
+		    than 10% difference between the best and the worst case
+		    timings.
+	MULS,MULU - The multiply algorithm requires 38+2n clocks where
+		    n is defined as:
+		MULU: n = the number of ones in the &lt;ea&gt;
+		MULS: n = concatenate the &lt;ea&gt; with a zero as the LSB;
+			  n is the resultant number of 10 or 01 patterns
+			  in the 17-bit source; i.e., worst case happens
+			  when the source is $5555
+</pre></div>
+<h1><span class="mw-headline" id="Immediate_instructions">Immediate instructions</span></h1>
+<p>The number of clock periods periods shown in this table includes the 
+time to fetch immediate operands, perform the operations, store the 
+results and read the next operation. The total number of clock periods 
+must be added respectively to those of the effective address calculation
+ where indicated (+).
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>&nbsp;</th>
+<th>Size</th>
+<th>#,Dn</th>
+<th>#,An</th>
+<th>#,M
+</th></tr>
+<tr>
+<th rowspan="2">ADDI
+</th>
+<td>B,W
+</td>
+<td class="green">8(2/0)</td>
+<td>-</td>
+<td class="yellow">12(2/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="orange">16(3/0)</td>
+<td>-</td>
+<td class="red">20(3/2)+
+</td></tr>
+<tr>
+<th rowspan="2">ADDQ
+</th>
+<td>B,W
+</td>
+<td class="green">4(1/0)</td>
+<td class="yellow">8(1/0)*</td>
+<td class="orange">12(1/2)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="yellow">8(1/0)</td>
+<td class="yellow">8(1/0)</td>
+<td class="orange">12(1/2)+
+</td></tr>
+<tr>
+<th rowspan="2">ANDI
+</th>
+<td>B,W
+</td>
+<td class="green">8(2/0)</td>
+<td>-</td>
+<td class="yellow">12(1/2)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="orange">16(3/0)</td>
+<td>-</td>
+<td class="red">20(3/1)+
+</td></tr>
+<tr>
+<th rowspan="2">CMPI
+</th>
+<td>B,W
+</td>
+<td class="green">8(2/0)</td>
+<td>-</td>
+<td class="green">8(2/0)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="orange">14(3/0)</td>
+<td>-</td>
+<td class="yellow">12(3/1)+
+</td></tr>
+<tr>
+<th rowspan="2">EORI
+</th>
+<td>B,W
+</td>
+<td class="green">8(2/0)</td>
+<td>-</td>
+<td class="yellow">12(2/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="orange">16(3/0)</td>
+<td>-</td>
+<td class="red">20(3/2)+
+</td></tr>
+<tr>
+<th>MOVEQ
+</th>
+<td>L
+</td>
+<td class="green">4(1/0)</td>
+<td>-</td>
+<td>-
+</td></tr>
+<tr>
+<th rowspan="2">ORI
+</th>
+<td>B,W
+</td>
+<td class="green">8(2/0)</td>
+<td>-</td>
+<td class="yellow">12(2/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="orange">16(3/0)</td>
+<td>-</td>
+<td class="red">20(3/2)+
+</td></tr>
+<tr>
+<th rowspan="2">SUBI
+</th>
+<td>B,W
+</td>
+<td class="green">8(2/0)</td>
+<td>-</td>
+<td class="yellow">12(2/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="orange">16(3/0)</td>
+<td>-</td>
+<td class="red">20(3/2)+
+</td></tr>
+<tr>
+<th rowspan="2">SUBQ
+</th>
+<td>B,W
+</td>
+<td class="green">4(1/0)</td>
+<td class="yellow">8(1/0)*</td>
+<td class="yellow">8(1/1)+
+</td></tr>
+<tr>
+<td>L
+</td>
+<td class="yellow">8(1/0)</td>
+<td class="yellow">8(1/0)</td>
+<td class="orange">12(1/2)+
+</td></tr></tbody></table>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>	+ Add effective address calculation time
+	* word only
+</pre></div>
+<h1><span class="mw-headline" id="Single_operand_instructions">Single operand instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This table indicates the number of clock periods for the single operand
+instructions. The number of clock periods and the number of read and write cycles
+must be added respectively to those of the effective address calculation
+where indicated.
+
+instruction	size		register	 memory
+
+CLR			byte,word	4(1/0)		 8(1/1) +
+			  long		6(1/0)		12(1/2) +
+NBCD		  byte		6(1/0)		 8(1/1) +
+NEG			byte,word	4(1/0)		 8(1/1) +
+			  long		6(1/0)		12(1/2) +
+NEGX		byte,word	4(1/0)		 8(1/1) +
+			  long		6(1/0)		12(1/2) +
+NOT			byte,word	4(1/0)		 8(1/1) +
+			  long		6(1/0)		12(1/2) +
+Scc			byte,false	4(1/0)		 8(1/1) +
+			byte,true	6(1/0)		 8(1/1) +
+TAS #		  byte		4(1/0)		10(1/1) +
+TST			byte,word	4(1/0)		 4(1/0) +
+			  long		4(1/0)		 4(1/0) +
+
+	+ add effective address calculation time
+        # This instruction should never be used on the Amiga as its invisiable
+          read/write cycle can disrupt system DMA.
+</pre></div>
+<h1><span class="mw-headline" id="Shift_and_rotate_instructions">Shift and rotate instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This table indicates the number of clock periods for the shift and rotate
+instructions. The number of clock periods and the number of read and write
+cycles must be added respectively to those of the effective address
+calculation where indicated.
+
+instruction	size		register	memory
+
+ASR,ASL		byte,word	6+2n(1/0)	8(1/1) +
+			  long		8+2n(1/0)	  -
+LSR,LSL		byte,word	6+2n(1/0)	8(1/1) +
+			  long		8+2n(1/0)	  -
+ROR,ROL		byte,word	6+2n(1/0)	8(1/1) +
+			  long		8+2n(1/0)	  -
+ROXR,ROXL	byte,word	6+2n(1/0)	8(1/1) +
+			  long		8+2n(1/0)	  -
+
+	+ add effective address calculation time
+	n is the shift or rotate count
+</pre></div>
+<h1><span class="mw-headline" id="Bit_manipulation_instructions">Bit manipulation instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This table indicates the number of clock periods required for the bit
+manipulation instructions. The number of clock periods and the number of read and 
+write cycles must be added respectively to those of the effective address
+calculation where indicated. Dynamic: register, static: immediate.
+
+instruction  size            dynamic                 static
+                        register   memory       register   memory	
+BCHG         byte          -       8(1/1) +        -       12(2/1) +
+             long        8(1/0) *    -          12(2/0) *     -
+BCLR         byte          -       8(1/1) +        -       12(2/1) +
+             long       10(1/0) *    -          14(2/0) *     -
+BSET         byte          -       8(1/1) +        -       12(2/1) +
+             long        8(1/0) *    -          12(2/0) *     -
+BTST         byte          -  	   4(1/0) +        -        8(2/0) +
+             long        6(1/0)      -          10(2/0)       -
+
+	+ add effective address calculation time
+	* indicates maximum value
+</pre></div>
+<h1><span class="mw-headline" id="Conditional_instructions">Conditional instructions</span></h1>
+<table class="wikitable">
+<tbody><tr>
+<th>Mnemonic</th>
+<th>Displacement</th>
+<th>Branch taken</th>
+<th>Not taken
+</th></tr>
+<tr>
+<td rowspan="2">Bcc
+</td>
+<td>byte
+</td>
+<td class="yellow">10(2/0)</td>
+<td class="green">8(1/0)
+</td></tr>
+<tr>
+<td>word
+</td>
+<td class="yellow">10(2/0)</td>
+<td class="orange">12(1/0)
+</td></tr>
+<tr>
+<td rowspan="2">BRA
+</td>
+<td>byte
+</td>
+<td class="yellow">10(2/0)
+</td>
+<td>
+</td></tr>
+<tr>
+<td>word
+</td>
+<td class="yellow">10(2/0)
+</td>
+<td>
+</td></tr>
+<tr>
+<td rowspan="2">BSR
+</td>
+<td>byte
+</td>
+<td class="red">18(2/2)
+</td>
+<td>
+</td></tr>
+<tr>
+<td>word
+</td>
+<td class="red">18(2/2)
+</td>
+<td>
+</td></tr>
+<tr>
+<td rowspan="2">DBcc
+</td>
+<td>cc true
+</td>
+<td>
+</td>
+<td class="orange">12(2/0)
+</td></tr>
+<tr>
+<td>cc false
+</td>
+<td class="yellow">10(2/0)
+</td>
+<td class="orange">14(3/0)
+</td></tr></tbody></table>
+<h1><span id="JMP.2C_JSR.2C_LEA.2C_PEA_and_MOVEM_instructions"></span><span class="mw-headline" id="JMP,_JSR,_LEA,_PEA_and_MOVEM_instructions">JMP, JSR, LEA, PEA and MOVEM instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This Table indicates the number of clock periods required for the jump,
+jump-to-subroutine, load effective address, push effective address and
+move multiple registers instructions.
+
+instr	size    (An)		(An)+		-(An)	 d(An)		d(An,ix)+   xxx.W      xxx.L      d(PC)      d(PC,ix)*
+JMP     -	    8(2/0)	     -		      -    10(2/0)		 14(3/0)    10(2/0)    12(3/0)	  10(2/0)    14(3/0)
+JSR     -	   16(2/2)	     -		      -	   18(2/2)		 22(2/2)    18(2/2)    20(3/2)	  18(2/2)    22(2/2)
+LEA     -	    4(1/0)	     -		      -	    8(2/0)		 12(2/0)     8(2/0)    12(3/0)	   8(2/0)    12(2/0)
+PEA     -	   12(1/2)	     -		      -	   16(2/2)		 20(2/2)    16(2/2)    20(3/2)	  16(2/2)    20(2/2)
+MOVEM   word     12+4n       12+4n	      -      16+4n		   18+4n      16+4n      20+4n	    16+4n      18+4n
+M-&gt;R           (3+n/0)	   (3+n/0)	      -	   (4+n/0)		 (4+n/0)    (4+n/0)    (5+n/0)	  (4+n/0)    (4+n/0)
+	    long     12+8n	     12+8n	      -	     16+8n		   18+8n      16+8n      20+8n	    16+8n      18+8n
+		      (3+2n/0)    (3+2n/0)	      -   (4+2n/0)		(4+2n/0)   (4+2n/0)   (5+2n/0)	 (4+2n/0)   (4+2n/0)
+MOVEM	word	  8+4n	     -		     8+4n	 12+4n  	   14+4n      12+4n      16+4n	    -			-
+R-&gt;M		     (2/n)	     -		    (2/n)	 (3/n)		   (3/n)      (3/n)      (4/n)	    -			-
+	    long	  8+8n	     -		     8+8n	 12+8n  	   14+8n      12+8n      16+8n	    -			-
+                (2/2n)	     -		   (2/2n)	(3/2n)		  (3/2n)     (3/2n)     (4/2n)	    -			-
+
+n is the number of registers to move
+* is the size of the index register (ix) does not affect the instruction's
+  execution time
+</pre></div>
+<h1><span class="mw-headline" id="Multi-precision_instructions">Multi-precision instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This table indicates the number of clock periods for the multi-precision
+instructions. The number of clock periods includes the time to fetch both
+operands, perform the operations, store the results and read the next 
+instructions.
+
+instruction	size		op Dn,Dn	op M,M
+
+ADDX		byte,word	4(1/0)		18(3/1)
+			  long		8(1/0)		30(5/2)
+CMPM		byte,word	  -			12(3/0)
+			  long		  -			20(5/0)
+SUBX		byte,word	4(1/0)		18(3/1)
+			  long		8(1/0)		30(5/2)
+ABCD		  byte		6(1/0)		18(3/1)
+SBCD		  byte		6(1/0)		18(3/1)
+</pre></div>
+<h1><span class="mw-headline" id="Miscellaneous_instructions">Miscellaneous instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This table indicates the number of clock periods for the following 
+miscellaneous instructions. The number of clock periods and plus the number
+of read and write cycles must be added to those of the effective address
+calculation where indicated.
+
+instruction		size	register	memory
+
+ANDI to CCR		byte	 20(3/0)	   -
+ANDI to SR		word	 20(3/0)	   -
+CHK				 -		 10(1/0) +	   -
+EORI to CCR		byte	 20(3/0)	   -
+EORI to SR		word	 20(3/0)	   -
+ORI to CCR		byte	 20(3/0)	   -
+ORI to SR		word	 20(3/0)	   -
+MOVE from SR	 -	 	  6(1/0)	 8(1/1)+
+MOVE to CCR	 	 -		 12(1/0)	12(1/0)+
+MOVE to SR	 	 -		 12(1/0)	12(1/0)+
+EXG				 -		  6(1/0)	   -
+EXT				word	  4(1/0)	   -
+				long	  4(1/0)	   -
+LINK		 	 -		 16(2/2)	   -
+MOVE from USP	 -		  4(1/0)	   -
+MOVE to USP	 	 -		  4(1/0)	   -
+NOP				 -		  4(1/0)	   -
+RESET			 -		132(1/0)	   -
+RTE				 -		 20(5/0)	   -
+RTR				 -		 20(5/0)	   -
+RTS				 -		 16(4/0)	   -
+STOP		 	 -		  4(0/0)	   -
+SWAP		 	 -		  4(1/0)	   -
+TRAPV (No Trap)	 -		  4(1/0)	   -
+UNLK		 	 -		 12(3/0)	   -
+
+	+ add effective address calculation time
+</pre></div>
+<h1><span class="mw-headline" id="Move_Peripheral_instructions">Move Peripheral instructions</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>instruction	size	register-&gt;memory	memory-&gt;register
+
+MOVEP		word	16(2/2)				16(4/0)	
+			long	24(2/4)				24(6/0)
+</pre></div>
+<h1><span class="mw-headline" id="Exception_processing">Exception processing</span></h1>
+<div class="mw-highlight mw-highlight-lang-text mw-content-ltr" dir="ltr"><pre><span></span>This table indicates the number of clock periods for exception processing.
+The number of clock periods includes the time for all stacking, the vector
+fetch and the fetch of the first two instruction words of the handler routine.
+
+	exception						periods
+
+	address error					50(4/7)
+	bus error						50(4/7)
+	CHK instruction (trap taken)	44(5/3)+
+	Divide by Zero					42(5/3)
+	illegal instruction				34(4/3)
+	interrupt						44(5/3)*
+	privilege violation				34(4/3)
+	_____
+	RESET **						40(6/0)
+	trace							34(4/3)
+	TRAP instruction				38(4/3)
+	TRAPV instruction (trap taken)	34(4/3)
+
+	+ add effective address calculation time
+	* the interrupt acknowledge cycle is assumed to take four
+	  clock periods
+                                    _____     ____
+	** indicates the time from when RESET and HALT are first
+	  sampled as negated to when instruction execution starts
+</pre></div>
+<!-- 
+NewPP limit report
+Cached time: 20250603201357
+Cache expiry: 86400
+Reduced expiry: false
+Complications: [show‐toc, no‐toc‐conversion]
+CPU time usage: 0.070 seconds
+Real time usage: 0.678 seconds
+Preprocessor visited node count: 97/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/100
+Expensive parser function count: 10/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 9061/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wiki_neogeo:pcache:idhash:1242-0!canonical and timestamp 20250603201357 and revision id 6355. Rendering was triggered because: page-view
+ -->
+</div>
+<div class="printfooter" data-nosnippet="">Retrieved from "<a dir="ltr" href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings&amp;oldid=6355">https://wiki.neogeodev.org/index.php?title=68k_instructions_timings&amp;oldid=6355</a>"</div></div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="https://wiki.neogeodev.org/index.php?title=Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="https://wiki.neogeodev.org/index.php?title=Category:Base_system" title="Category:Base system">Base system</a></li><li><a href="https://wiki.neogeodev.org/index.php?title=Category:Code" title="Category:Code">Code</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		
+<nav id="p-personal" class="vector-menu mw-portlet mw-portlet-personal vector-user-menu-legacy" aria-labelledby="p-personal-label" role="navigation">
+	<h3 id="p-personal-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">Personal tools</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="pt-login" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Special:UserLogin&amp;returnto=68k+instructions+timings" title="You are encouraged to log in; however, it is not mandatory [Alt+Shift+o]" accesskey="o"><span>Log in</span></a></li><li id="pt-createaccount" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Special:RequestAccount" title="You are encouraged to create an account and log in; however, it is not mandatory"><span>Request account</span></a></li></ul>
+		
+	</div>
+</nav>
+
+		<div id="left-navigation">
+			
+<nav id="p-namespaces" class="vector-menu mw-portlet mw-portlet-namespaces vector-menu-tabs vector-menu-tabs-legacy" aria-labelledby="p-namespaces-label" role="navigation">
+	<h3 id="p-namespaces-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">Namespaces</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings" title="View the content page [Alt+Shift+c]" accesskey="c"><span>Page</span></a></li><li id="ca-talk" class="new mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Talk:68k_instructions_timings&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [Alt+Shift+t]" accesskey="t"><span>Discussion</span></a></li></ul>
+		
+	</div>
+</nav>
+
+			
+<nav id="p-variants" class="vector-menu mw-portlet mw-portlet-variants emptyPortlet vector-menu-dropdown" aria-labelledby="p-variants-label" role="navigation">
+	<input type="checkbox" id="p-variants-checkbox" role="button" aria-haspopup="true" data-event-name="ui.dropdown-p-variants" class="vector-menu-checkbox" aria-labelledby="p-variants-label">
+	<label id="p-variants-label" aria-label="Change language variant" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">English</span>
+	</label>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+		</div>
+		<div id="right-navigation">
+			
+<nav id="p-views" class="vector-menu mw-portlet mw-portlet-views vector-menu-tabs vector-menu-tabs-legacy" aria-labelledby="p-views-label" role="navigation">
+	<h3 id="p-views-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">Views</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="ca-view" class="selected mw-list-item collapsible"><a href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings"><span>Read</span></a></li><li id="ca-viewsource" class="mw-list-item collapsible"><a href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings&amp;action=edit" title="This page is protected.
+You can view its source [Alt+Shift+e]" accesskey="e"><span>View source</span></a></li><li id="ca-history" class="mw-list-item collapsible"><a href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings&amp;action=history" title="Past revisions of this page [Alt+Shift+h]" accesskey="h"><span>View history</span></a></li></ul>
+		
+	</div>
+</nav>
+
+			
+<nav id="p-cactions" class="vector-menu mw-portlet mw-portlet-cactions emptyPortlet vector-menu-dropdown" aria-labelledby="p-cactions-label" role="navigation" title="More options">
+	<input type="checkbox" id="p-cactions-checkbox" role="button" aria-haspopup="true" data-event-name="ui.dropdown-p-cactions" class="vector-menu-checkbox" aria-labelledby="p-cactions-label">
+	<label id="p-cactions-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">More</span>
+	</label>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+			
+<div id="p-search" role="search" class="vector-search-box-vue  vector-search-box-show-thumbnail vector-search-box-auto-expand-width vector-search-box">
+	<div>
+		<form action="/index.php" id="searchform" class="vector-search-box-form">
+			<div id="simpleSearch" class="vector-search-box-inner" data-search-loc="header-navigation">
+				<input class="vector-search-box-input" type="search" name="search" placeholder="Search NeoGeo Development Wiki" aria-label="Search NeoGeo Development Wiki" autocapitalize="sentences" title="Search NeoGeo Development Wiki [Alt+Shift+f]" accesskey="f" id="searchInput">
+				<input type="hidden" name="title" value="Special:Search">
+				<input id="mw-searchButton" class="searchButton mw-fallbackSearchButton" type="submit" name="fulltext" title="Search the pages for this text" value="Search">
+				<input id="searchButton" class="searchButton" type="submit" name="go" title="Go to a page with this exact name if it exists" value="Go">
+			</div>
+		</form>
+	</div>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel" class="vector-legacy-sidebar">
+	<div id="p-logo" role="banner">
+		<a class="mw-wiki-logo" href="https://wiki.neogeodev.org/index.php?title=Main_Page" title="Visit the main page"></a>
+	</div>
+	
+<nav id="p-navigation" class="vector-menu mw-portlet mw-portlet-navigation vector-menu-portal portal" aria-labelledby="p-navigation-label" role="navigation">
+	<h3 id="p-navigation-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">Navigation</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Main_Page" title="Visit the main page [Alt+Shift+z]" accesskey="z"><span>Main page</span></a></li><li id="n-recentchanges" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Special:RecentChanges" title="A list of recent changes in the wiki [Alt+Shift+r]" accesskey="r"><span>Recent changes</span></a></li><li id="n-help" class="mw-list-item"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out"><span>Help</span></a></li></ul>
+		
+	</div>
+</nav>
+
+	
+<nav id="p-Quick_links" class="vector-menu mw-portlet mw-portlet-Quick_links vector-menu-portal portal" aria-labelledby="p-Quick_links-label" role="navigation">
+	<h3 id="p-Quick_links-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">Quick links</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-Address-defines" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=68k_ASM_defines"><span>Address defines</span></a></li><li id="n-Registers" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Memory_mapped_registers"><span>Registers</span></a></li><li id="n-Schematics" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=MVS_schematics"><span>Schematics</span></a></li><li id="n-Chip-pinouts" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Category:Chips"><span>Chip pinouts</span></a></li><li id="n-Signal-names" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Signal_names"><span>Signal names</span></a></li><li id="n-Cart/Connector-pinouts" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Pinouts"><span>Cart/Connector pinouts</span></a></li><li id="n-BIOS-calls" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Category:BIOS_calls"><span>BIOS calls</span></a></li><li id="n-Common-pitfalls" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Common_pitfalls"><span>Common pitfalls</span></a></li></ul>
+		
+	</div>
+</nav>
+
+<nav id="p-tb" class="vector-menu mw-portlet mw-portlet-tb vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation">
+	<h3 id="p-tb-label" class="vector-menu-heading ">
+		<span class="vector-menu-heading-label">Tools</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Special:WhatLinksHere/68k_instructions_timings" title="A list of all wiki pages that link here [Alt+Shift+j]" accesskey="j"><span>What links here</span></a></li><li id="t-recentchangeslinked" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Special:RecentChangesLinked/68k_instructions_timings" rel="nofollow" title="Recent changes in pages linked from this page [Alt+Shift+k]" accesskey="k"><span>Related changes</span></a></li><li id="t-specialpages" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=Special:SpecialPages" title="A list of all special pages [Alt+Shift+q]" accesskey="q"><span>Special pages</span></a></li><li id="t-print" class="mw-list-item"><a href="javascript:print();" rel="alternate" title="Printable version of this page [Alt+Shift+p]" accesskey="p"><span>Printable version</span></a></li><li id="t-permalink" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings&amp;oldid=6355" title="Permanent link to this revision of this page"><span>Permanent link</span></a></li><li id="t-info" class="mw-list-item"><a href="https://wiki.neogeodev.org/index.php?title=68k_instructions_timings&amp;action=info" title="More information about this page"><span>Page information</span></a></li></ul>
+		
+	</div>
+</nav>
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo">
+	<ul id="footer-info">
+	<li id="footer-info-lastmod"> This page was last edited on 25 November 2018, at 16:44.</li>
+	<li id="footer-info-copyright">Content is available under <a class="external" rel="nofollow" href="http://creativecommons.org/licenses/publicdomain/">Public Domain</a> unless otherwise noted.</li>
+</ul>
+
+	<ul id="footer-places">
+	<li id="footer-places-privacy"><a href="https://wiki.neogeodev.org/index.php?title=Neodev:Privacy_policy">Privacy policy</a></li>
+	<li id="footer-places-about"><a href="https://wiki.neogeodev.org/index.php?title=Neodev:About">About NeoGeo Development Wiki</a></li>
+	<li id="footer-places-disclaimers"><a href="https://wiki.neogeodev.org/index.php?title=Neodev:General_disclaimer">Disclaimers</a></li>
+</ul>
+
+	<ul id="footer-icons" class="noprint">
+	<li id="footer-copyrightico"><a href="http://creativecommons.org/licenses/publicdomain/"><img src="68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/public-domain.png" alt="Public Domain" width="88" height="31" loading="lazy"></a></li>
+	<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/poweredby_mediawiki_132x47.png 1.5x, 68k%20instructions%20timings%20-%20NeoGeo%20Development%20Wiki_files/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"></a></li>
+</ul>
+
+</footer>
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":190,"wgPageParseReport":{"limitreport":{"cputime":"0.070","walltime":"0.678","ppvisitednodes":{"value":97,"limit":1000000},"postexpandincludesize":{"value":0,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":100},"expensivefunctioncount":{"value":10,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":9061,"limit":5000000},"timingprofile":["100.00%    0.000      1 -total"]},"cachereport":{"timestamp":"20250603201357","ttl":86400,"transientcontent":false}}});});</script>
+
+</body></html>

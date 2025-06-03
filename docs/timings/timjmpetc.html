@@ -1,0 +1,48 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>JMP, JSR, LEA, PEA and MOVEM Instruction Execution Times</title>
+</head><body><h1>JMP, JSR, LEA, PEA and MOVEM Instruction Execution Times</h1>
+<pre>
+This Table indicates the number of clock periods required for the jump,
+jump-to-subroutine, load effective address, push effective address and
+move multiple registers instructions. The number of bus read and write 
+cycles is shown in parenthesis as (r/w).
+
+
+	JMP, JSR, LEA, PEA and MOVEM Instruction Execution Times
+
+instr	size	(An)		(An)+		-(An)	d(An)	
+JMP	-	  8(2/0)	   -		  -	10(2/0)
+JSR	-	 16(2/2)	   -		  -	18(2/2)
+LEA	-	  4(1/0)	   -		  -	 8(2/0)
+PEA	-	 12(1/2)	   -		  -	16(2/2)
+MOVEM	word	   12+4n	   12+4n	  -	  16+4n
+M-&gt;R		 (3+n/0)	 (3+n/0)	  -	(4+n/0)
+	long	   12+8n	   12+8n	  -	  16+8n
+		(3+2n/0)	(3+2n/0)	  -    (4+2n/0)
+MOVEM	word	    8+4n	   -		  8+4n	  12+4n
+R-&gt;M		   (2/n)	   -		 (2/n)	  (3/n)
+	long	    8+8n	   -		  8+8n	  12+8n
+		  (2/2n)	   -		(2/2n)	 (3/2n)
+
+instr	size	d(An,ix)+   xxx.W      xxx.L      d(PC)      d(PC,ix)*
+JMP	 -	 14(3/0)    10(2/0)    12(3/0)	  10(2/0)    14(3/0)
+JSR	 -	 22(2/2)    18(2/2)    20(3/2)	  18(2/2)    22(2/2)
+LEA	 -	 12(2/0)     8(2/0)    12(3/0)	   8(2/0)    12(2/0)
+PEA	 -	 20(2/2)    16(2/2)    20(3/2)	  16(2/2)    20(2/2)
+MOVEM	word	   18+4n      16+4n      20+4n	    16+4n      18+4n
+M-&gt;R		 (4+n/0)    (4+n/0)    (5+n/0)	  (4+n/0)    (4+n/0)
+	long	   18+8n      16+8n      20+8n	    16+8n      18+8n
+		(4+2n/0)   (4+2n/0)   (5+2n/0)	 (4+2n/0)   (4+2n/0)
+MOVEM	word	   14+4n      12+4n      16+4n	    -		-
+R-&gt;M		   (3/n)      (3/n)      (4/n)	    -		-
+	long	   14+8n      12+8n      16+8n	    -		-
+		  (3/2n)     (3/2n)     (4/2n)	    -		-
+
+n is the number of registers to move
+* is the size of the index register (ix) does not affect the instruction's
+  execution time
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timjmpetc.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:13 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>

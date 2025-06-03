@@ -1,0 +1,29 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>Specificational Instruction Execution Times</title>
+</head><body><h1>Specificational Instruction Execution Times</h1>
+<pre>
+This table indicates the number of clock periods for the conditional
+instructions. The number of read and write cycles is shown in parenthesis
+as (r/w). The number of clock periods and the number of read and write
+cycles must be added respectively to those of the effective address
+calculation where indicated.
+
+
+		Conditional Instruction Execution Times
+
+instruction	displacement	branch		 branch
+				taken		not taken
+
+Bcc		byte		10(2/0)		 8(1/0)
+		word		10(2/0)		12(1/0)
+BRA		byte		10(2/0)		   -
+		word		10(2/0)		   -
+BSR		byte		18(2/2)		   -
+		word		18(2/2)		   -
+DBcc		CC true		   -		12(2/0)
+		CC false	10(2/0)		14(3/0)
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timspec.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:13 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>

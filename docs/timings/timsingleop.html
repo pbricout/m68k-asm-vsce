@@ -1,0 +1,39 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>Single Operand Instruction Execution Times</title>
+</head><body><h1>Single Operand Instruction Execution Times</h1>
+<pre>
+This table indicates the number of clock periods for the single operand
+instructions. The number of bus read and write cycles is shown in parenthesis
+as (r/w). The number of clock periods and the number of read and write cycles
+must be added respectively to those of the effective address calculation
+where indicated.
+
+
+		Single Operand Instruction Execution Times
+
+instruction	size		register	 memory
+
+CLR		byte,word	4(1/0)		 8(1/1) +
+		  long		6(1/0)		12(1/2) +
+NBCD		  byte		6(1/0)		 8(1/1) +
+NEG		byte,word	4(1/0)		 8(1/1) +
+		  long		6(1/0)		12(1/2) +
+NEGX		byte,word	4(1/0)		 8(1/1) +
+		  long		6(1/0)		12(1/2) +
+NOT		byte,word	4(1/0)		 8(1/1) +
+		  long		6(1/0)		12(1/2) +
+Scc		byte,false	4(1/0)		 8(1/1) +
+		byte,true	6(1/0)		 8(1/1) +
+TAS #		  byte		4(1/0)		10(1/1) +
+TST		byte,word	4(1/0)		 4(1/0) +
+		  long		4(1/0)		 4(1/0) +
+
+	+ add effective address calculation time
+        # This instruction should never be used on the Amiga as its invisiable
+          read/write cycle can disrupt system DMA. 
+
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timsingleop.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:13 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>

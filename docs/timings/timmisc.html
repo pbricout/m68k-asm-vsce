@@ -1,0 +1,47 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>Miscellaneous Instruction Execution Times</title>
+</head><body><h1>Miscellaneous Instruction Execution Times</h1>
+<pre>
+This table indicates the number of clock periods for the following 
+miscellaneous instructions. The number of bus read and write cycles is shown 
+in parenthesis as (r/w). The number of clock periods and plus the number
+of read and write cycles must be added to those of the effective address
+calculation where indicated.
+
+
+		Miscellaneous Instruction Execution Times
+
+instruction	size	register	memory
+
+ANDI to CCR	byte	 20(3/0)	   -
+ANDI to SR	word	 20(3/0)	   -
+CHK		 -	 10(1/0) +	   -
+EORI to CCR	byte	 20(3/0)	   -
+EORI to SR	word	 20(3/0)	   -
+ORI to CCR	byte	 20(3/0)	   -
+ORI to SR	word	 20(3/0)	   -
+MOVE from SR	 -	  6(1/0)	 8(1/1)+
+MOVE to CCR	 -	 12(1/0)	12(1/0)+
+MOVE to SR	 -	 12(1/0)	12(1/0)+
+EXG		 -	  6(1/0)	   -
+EXT		word	  4(1/0)	   -
+		long	  4(1/0)	   -
+LINK		 -	 16(2/2)	   -
+MOVE from USP	 -	  4(1/0)	   -
+MOVE to USP	 -	  4(1/0)	   -
+NOP		 -	  4(1/0)	   -
+RESET		 -	132(1/0)	   -
+RTE		 -	 20(5/0)	   -
+RTR		 -	 20(5/0)	   -
+RTS		 -	 16(4/0)	   -
+STOP		 -	  4(0/0)	   -
+SWAP		 -	  4(1/0)	   -
+TRAPV (No Trap)	 -	  4(1/0)	   -
+UNLK		 -	 12(3/0)	   -
+
+	+ add effective address calculation time
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timmisc.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:13 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>

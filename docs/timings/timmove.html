@@ -1,0 +1,54 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>Move Instruction Execution Times</title>
+</head><body><h1>Move Instruction Execution Times</h1>
+<pre>
+These following two tables indicate the number of clock periods for the move
+instruction. This data includes instruction fetch, operand reads, and operand
+writes. The number of bus read and write cycles is shown in parenthesis 
+as (r/w).
+
+
+		Move Byte and Word Instruction Execution Times
+
+     	 Dn	 An	 (An)	 (An)+	-(An)	 d(An)	d(An,ix) xxx.W	|xxx.L
+
+Dn	 4(1/0)	 4(1/0)	 8(1/1)	 8(1/1)  8(1/1)	12(2/1) 14(2/1) 12(2/1) 16(3/1)
+An	 4(1/0)	 4(1/0)	 8(1/1)	 8(1/1)	 8(1/1)	12(2/1) 14(2/1) 12(2/1) 16(3/1)
+(An)	 8(2/0)	 8(2/0)	12(2/1) 12(2/1) 12(2/1) 16(3/1) 18(3/1) 16(3/1) 20(4/1)
+(An)+	 8(2/0)	 8(2/0) 12(2/1) 12(2/1) 12(2/1) 16(3/1) 18(3/1) 16(3/1) 20(4/1)
+-(An)	10(2/0) 10(2/0) 14(2/1) 14(2/1) 14(2/1) 18(3/1) 20(4/1) 18(3/1) 22(4/1)
+d(An)	12(3/0) 12(3/0) 16(3/1) 16(3/1) 16(3/1) 20(4/1) 22(4/1) 20(4/1) 24(5/1)
+d(An,ix)14(3/0) 14(3/0) 18(3/1) 18(3/1) 18(3/1) 22(4/1) 24(4/1) 22(4/1) 26(5/1)
+xxx.W	12(3/0) 12(3/0) 16(3/1) 16(3/1) 16(3/1) 20(4/1) 22(4/1) 20(4/1) 24(5/1)
+xxx.L	16(4/0) 16(4/0) 20(4/1) 20(4/1) 20(4/1) 24(5/1) 26(5/1) 24(5/1) 28(6/1)
+d(PC)	12(3/0) 12(3/0) 16(3/1) 16(3/1) 16(3/1) 20(4/1) 22(4/1) 20(4/1) 24(5/1)
+d(PC,ix)14(3/0) 14(3/0) 18(3/1) 18(3/1) 18(3/1) 22(4/1) 24(4/1) 22(4/1) 26(5/1)
+#xxx	 8(2/0)	 8(2/0) 12(2/1) 12(2/1) 12(2/1) 16(3/1) 18(3/1) 16(3/1) 20(4/1)
+
+The size of the index register (ix) does not affect execution time
+
+
+		Move Long Instruction Execute Times 
+
+     	 Dn	 An	 (An)	 (An)+	-(An)	 d(An)	d(An,ix) xxx.W	|xxx.L
+
+Dn	 4(1/0)	 4(1/0)	12(1/2)	12(1/2)	12(1/2)	16(2/2)	18(2/2)	16(2/2)	20(3/2)
+An	 4(1/0)	 4(1/0)	12(1/2)	12(1/2)	12(1/2)	16(2/2)	18(2/2)	16(2/2)	20(3/2)
+(An)	12(3/0)	12(3/0)	20(3/2)	20(3/2)	20(3/2)	24(4/2)	26(4/2)	24(4/2)	28(5/2)
+(An)+	12(3/0)	12(3/0)	20(3/2)	20(3/2)	20(3/2)	24(4/2)	26(4/2)	24(4/2)	28(5/2)
+-(An)	14(3/0)	14(3/0)	22(3/2)	22(3/2)	22(3/2)	26(4/2)	28(4/2)	26(4/2)	30(5/2)
+d(An)	16(4/0)	16(4/0)	24(4/2)	24(4/2)	24(4/2)	28(5/2)	30(5/2)	28(5/2)	32(6/2)
+d(An,ix)18(4/0)	18(4/0)	26(4/2)	26(4/2)	26(4/2)	30(5/2)	32(5/2)	30(5/2)	34(6/2)
+xxx.W	16(4/0)	16(4/0)	24(4/2)	24(4/2)	24(4/2)	28(5/2)	30(5/2)	28(5/2)	32(6/2)
+xxx.L	20(5/0)	20(5/0)	28(5/2)	28(5/2)	28(5/2)	32(6/2)	34(6/2)	32(6/2)	36(7/2)
+d(PC)	16(4/0)	16(4/0)	24(4/2)	24(4/2)	24(4/2)	28(5/2)	30(5/2)	28(5/2)	32(5/2)
+d(PC,ix)18(4/0)	18(4/0)	26(4/2)	26(4/2)	26(4/2)	30(5/2)	32(5/2)	30(5/2)	34(6/2)
+#xxx	12(3/0)	12(3/0)	20(3/2)	20(3/2)	20(3/2)	24(4/2)	26(4/2)	24(4/2)	28(5/2)
+
+The size of the index register (ix) does not affect execution time
+
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timmove.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:13 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>

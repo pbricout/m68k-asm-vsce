@@ -1,0 +1,38 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>Exception Processing Execution Times</title>
+</head><body><h1>Exception Processing Execution Times</h1>
+<pre>
+This table indicates the number of clock periods for exception processing.
+The number of clock periods includes the time for all stacking, the vector
+fetch and the fetch of the first two instruction words of the handler routine.
+The number of bus read and write cycles is shown in parenthesis as (r/w).
+
+
+		Exception Processing Execution Times
+
+	exception			periods
+
+	address error			50(4/7)
+	bus error			50(4/7)
+	CHK instruction (trap taken)	44(5/3)+
+	Divide by Zero			42(5/3)
+	illegal instruction		34(4/3)
+	interrupt			44(5/3)*
+	privilege violation		34(4/3)
+        _____
+	RESET **			40(6/0)
+	trace				34(4/3)
+	TRAP instruction		38(4/3)
+	TRAPV instruction (trap taken)	34(4/3)
+
+	+ add effective address calculation time
+	* the interrupt acknowledge cycle is assumed to take four
+	  clock periods
+                                       _____     ____
+       ** indicates the time from when RESET and HALT are first
+	  sampled as negated to when instruction execution starts
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timexcept.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:12 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>

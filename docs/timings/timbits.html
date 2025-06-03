@@ -1,0 +1,31 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>Bit Manipulation Instruction Execution Times</title>
+</head><body><h1>Bit Manipulation Instruction Execution Times</h1>
+<pre>
+This table indicates the number of clock periods required for the bit
+manipulation instructions. The number of read and write cycles is shown in 
+parenthesis as (r/w). The number of clock periods and the number of read and 
+write cycles must be added respectively to those of the effective address
+calculation where indicated.
+
+
+		Bit Manipulation Instruction Execution Times
+
+instruction	size		dynamic			static
+			register   memory	register   memory	
+BCHG		byte	   -	   8(1/1) +	   -	   12(2/1) +
+		long	 8(1/0) *    -		12(2/0) *     -
+BCLR		byte	   -	   8(1/1) +	   -	   12(2/1) +
+		long	10(1/0) *    -		14(2/0) *     -
+BSET		byte	   -	   8(1/1) +	   -	   12(2/1) +
+		long	 8(1/0) *    -		12(2/0) *     -
+BTST		byte	   -  	   4(1/0) +	   -	    8(2/0) +
+		long	 6(1/0)	     -		10(2/0)       -
+
+	+ add effective address calculation time
+	* indicates maximum value
+</pre>
+<hr>HTML Conversion by <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/Computer/Amiga/Perl/AG2HTML.pl"><i>AG2HTML.pl</i></a> V2.941126c, perl $RCSfile: timbits.HTML,v $$Revision: 1.1 $$Date: 1999/09/14 21:14:12 $
+Patch level: 36
+ &amp; <a href="http://www.cs.cmu.edu:8001/Web/People/mjw/mjwhome.html"><i>witbrock@cs.cmu.edu</i></a>
+</body></html>
