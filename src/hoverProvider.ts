@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 
+// Local label rules: A local label (starting with a dot) is only visible between two global labels. Only one instance of a local label can exist in a global label section. All language features (hover, go to definition, rename, etc.) must respect this scoping.
+
 interface TimingInfo {
     cycles: string;
     readWrite: string;
@@ -377,25 +379,65 @@ export class M68kHoverProvider implements vscode.HoverProvider {
     private getSymbolInfo(document: vscode.TextDocument, symbolName: string): string | null {
         const text = document.getText();
         const lines = text.split('\n');
-        
         const escapedSymbol = this.escapeRegex(symbolName);
-        
-        // Look for label definition
+
+        // Section boundary regex (matches SECTION, .text, .data, .bss, etc.)
+        const sectionRegex = /^\s*(section\b|\.text\b|\.data\b|\.bss\b|text\b|data\b|bss\b)/i;
+        // Global label regex
+        const globalLabelRegex = /^\s*([a-zA-Z_][\w]*)\s*:/;
+
+        // If local label, only search in current section/global label region
+        const isLocal = symbolName.startsWith('.');
+        if (isLocal) {
+            // Find the line number of the reference (simulate as first occurrence for hover)
+            let refLine = -1;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].match(new RegExp(`^\s*${this.escapeRegex(symbolName)}\b`, 'i'))) {
+                    refLine = i;
+                    break;
+                }
+            }
+            if (refLine === -1) return null;
+            // Find the nearest section or global label above
+            let sectionStart = 0;
+            for (let i = refLine - 1; i >= 0; i--) {
+                if (lines[i].match(sectionRegex) || lines[i].match(globalLabelRegex)) {
+                    sectionStart = i;
+                    break;
+                }
+            }
+            // Find the next section or global label below
+            let sectionEnd = lines.length;
+            for (let i = refLine + 1; i < lines.length; i++) {
+                if (lines[i].match(sectionRegex) || lines[i].match(globalLabelRegex)) {
+                    sectionEnd = i;
+                    break;
+                }
+            }
+            // Now search for the local label only in this region
+            for (let i = sectionStart; i < sectionEnd; i++) {
+                const line = lines[i];
+                const localLabelMatch = line.match(new RegExp(`^\s*(${this.escapeRegex(symbolName)})\s*:`, 'i'));
+                if (localLabelMatch) {
+                    return `**${symbolName}** (Local Label)\n\nDefined at line ${i + 1}`;
+                }
+            }
+            return null;
+        }
+        // Global label: mylabel:
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const labelMatch = line.match(new RegExp(`^\\s*(${escapedSymbol})\\s*:`, 'i'));
+            const labelMatch = line.match(new RegExp(`^\s*(${escapedSymbol})\s*:`, 'i'));
             if (labelMatch) {
                 return `**${symbolName}** (Label)\n\nDefined at line ${i + 1}`;
             }
-            
             // Look for EQU definition
-            const equMatch = line.match(new RegExp(`^\\s*(${escapedSymbol})\\s+equ\\s+(.+)`, 'i'));
+            const equMatch = line.match(new RegExp(`^\s*(${escapedSymbol})\s+equ\s+(.+)`, 'i'));
             if (equMatch) {
                 const value = equMatch[2].split(';')[0].trim(); // Remove comment
                 return `**${symbolName}** (Constant)\n\nValue: \`${value}\`\nDefined at line ${i + 1}`;
             }
         }
-        
         return null;
     }    private escapeRegex(str: string): string {
         return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
