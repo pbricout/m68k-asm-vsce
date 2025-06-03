@@ -1,0 +1,173 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "M68K Assembly",
+  "scopeName": "source.m68k-asm",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#labels"
+    },
+    {
+      "include": "#directives"
+    },
+    {
+      "include": "#instructions"
+    },
+    {
+      "include": "#registers"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#operators"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.semicolon.m68k-asm",
+          "begin": ";",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.m68k-asm",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "labels": {
+      "patterns": [
+        {
+          "name": "entity.name.function.m68k-asm",
+          "match": "^\\s*([a-zA-Z_][a-zA-Z0-9_]*):"
+        },
+        {
+          "name": "variable.other.m68k-asm",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+        }
+      ]
+    },
+    "directives": {
+      "name": "keyword.control.directive.m68k-asm",
+      "match": "\\b(?i)(org|equ|dc|ds|dcb|even|align|include|incbin|macro|endm|if|else|endif|section|text|data|bss)\\b"
+    },
+    "instructions": {
+      "patterns": [
+        {
+          "name": "keyword.mnemonic.data-movement.m68k-asm",
+          "match": "\\b(?i)(move|movea|movem|movep|moveq|exg|lea|pea|swap)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.arithmetic.m68k-asm",
+          "match": "\\b(?i)(add|adda|addi|addq|addx|sub|suba|subi|subq|subx|muls|mulu|divs|divu|neg|negx|clr|ext|abcd|sbcd|nbcd)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.logical.m68k-asm",
+          "match": "\\b(?i)(and|andi|or|ori|eor|eori|not|asl|asr|lsl|lsr|rol|ror|roxl|roxr)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.compare.m68k-asm",
+          "match": "\\b(?i)(cmp|cmpa|cmpi|cmpm|tst)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.branch.m68k-asm",
+          "match": "\\b(?i)(bra|bsr|bcc|bcs|beq|bne|bge|bgt|ble|blt|bhi|bls|bpl|bmi|bvc|bvs)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.jump.m68k-asm",
+          "match": "\\b(?i)(jmp|jsr|rts|rtr|rte)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.condition.m68k-asm",
+          "match": "\\b(?i)(scc|scs|seq|sne|sge|sgt|sle|slt|shi|sls|spl|smi|svc|svs|st|sf)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.system.m68k-asm",
+          "match": "\\b(?i)(trap|trapv|chk|stop|reset|nop|illegal)\\b"
+        },
+        {
+          "name": "keyword.mnemonic.bit.m68k-asm",
+          "match": "\\b(?i)(btst|bset|bclr|bchg)\\b"
+        }
+      ]
+    },
+    "registers": {
+      "patterns": [
+        {
+          "name": "variable.language.register.data.m68k-asm",
+          "match": "\\b(?i)[dD][0-7]\\b"
+        },
+        {
+          "name": "variable.language.register.address.m68k-asm",
+          "match": "\\b(?i)[aA][0-7]\\b"
+        },
+        {
+          "name": "variable.language.register.special.m68k-asm",
+          "match": "\\b(?i)(sp|pc|sr|ccr|usp|ssp)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.m68k-asm",
+          "match": "\\$[0-9a-fA-F]+"
+        },
+        {
+          "name": "constant.numeric.hex.m68k-asm",
+          "match": "0[xX][0-9a-fA-F]+"
+        },
+        {
+          "name": "constant.numeric.binary.m68k-asm",
+          "match": "%[01]+"
+        },
+        {
+          "name": "constant.numeric.octal.m68k-asm",
+          "match": "@[0-7]+"
+        },
+        {
+          "name": "constant.numeric.decimal.m68k-asm",
+          "match": "\\b\\d+"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.m68k-asm",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.m68k-asm",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.m68k-asm",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.m68k-asm",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "operators": {
+      "name": "keyword.operator.m68k-asm",
+      "match": "[+\\-*/()\\[\\]<>=!&|^~]"
+    }
+  }
+}

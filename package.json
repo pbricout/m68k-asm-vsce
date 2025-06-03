@@ -1,0 +1,71 @@
+{
+  "name": "m68k-assembly",
+  "displayName": "M68K Assembly Language Support",
+  "description": "Complete M68K assembly language support with syntax highlighting, IntelliSense, and navigation features",
+  "version": "1.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:m68k-asm"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "m68k-asm",
+        "aliases": [
+          "M68K Assembly",
+          "m68k-asm",
+          "68k"
+        ],
+        "extensions": [
+          ".s",
+          ".i",
+          ".inc",
+          ".asm",
+          ".68k",
+          ".m68k"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "m68k-asm",
+        "scopeName": "source.m68k-asm",
+        "path": "./syntaxes/m68k-asm.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "M68K Assembly",
+      "properties": {
+        "m68kAsm.enableHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable hover information for instructions and registers"
+        },
+        "m68kAsm.enableGoToDefinition": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable go to definition for labels"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@vscode/vsce": "^3.4.2",
+    "typescript": "^4.9.4"
+  }
+}
