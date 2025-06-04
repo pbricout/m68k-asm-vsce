@@ -115,11 +115,11 @@
       "patterns": [
         {
           "name": "entity.name.function.m68k-asm",
-          "match": "^\\s*([A-Za-z_][A-Za-z0-9_]*):"
+          "match": "^(?i)\\s*([a-z_][a-z0-9_]*)\\s*:"
         },
         {
-          "name": "variable.other.m68k-asm",
-          "match": "(?<=\\s)([A-Za-z_][A-Za-z0-9_]*)(?=\\s|$)",
+          "name": "entity.name.function.m68k-asm",
+          "match": "^(?i)\\s*([a-z_][a-z0-9_]*)(?=\\s|$)",
           "captures": {
             "1": { "name": "entity.name.function.m68k-asm" }
           }
