@@ -68,21 +68,49 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {    pr
                 return null;
             }
             
-            const lines = text.split('\n');
-            const labelRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s*:`, 'i');
+            const lines = text.split('\n');            const labelRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s*:`, 'i');
             for (let i = 0; i < lines.length; i++) {
                 const match = lines[i].match(labelRegex);
                 if (match) {
                     const character = lines[i].indexOf(match[1]);
+                    M68kLogger.logSuccess(`Found label definition: ${labelName} at line ${i + 1}`);
                     return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
                 }
-            }
-            
-            const equRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s+equ\\b`, 'i');
+            }              const equRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s+equ\\b`, 'i');
             for (let i = 0; i < lines.length; i++) {
                 const match = lines[i].match(equRegex);
                 if (match) {
                     const character = lines[i].indexOf(match[1]);
+                    M68kLogger.logSuccess(`Found equ definition: ${labelName} at line ${i + 1}`);
+                    return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
+                }
+            }              // Search for macro definitions
+            const macroRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s+macro\\b`, 'i');
+            for (let i = 0; i < lines.length; i++) {
+                const match = lines[i].match(macroRegex);
+                if (match) {
+                    const character = lines[i].indexOf(match[1]);
+                    M68kLogger.logSuccess(`Found macro definition: ${labelName} at line ${i + 1}`);
+                    return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
+                }
+            }
+              // Search for set directives
+            const setRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s+set\\b`, 'i');
+            for (let i = 0; i < lines.length; i++) {
+                const match = lines[i].match(setRegex);
+                if (match) {
+                    const character = lines[i].indexOf(match[1]);
+                    M68kLogger.logSuccess(`Found set definition: ${labelName} at line ${i + 1}`);
+                    return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
+                }
+            }
+              // Search for assignment-style definitions (SYMBOL = value)
+            const assignRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s*=`, 'i');
+            for (let i = 0; i < lines.length; i++) {
+                const match = lines[i].match(assignRegex);
+                if (match) {
+                    const character = lines[i].indexOf(match[1]);
+                    M68kLogger.logSuccess(`Found assignment definition: ${labelName} at line ${i + 1}`);
                     return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
                 }
             }
