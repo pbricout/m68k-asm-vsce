@@ -21,35 +21,31 @@ export class M68kLogger {
 
     static log(message: string, ...args: any[]): void {
         this.getOutputChannel().appendLine(this.formatMessage(message, ...args));
-    }
-
-    static warn(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`⚠ ${message}`, ...args));
+    }    static warn(message: string, ...args: any[]): void {
+        this.getOutputChannel().appendLine(this.formatMessage(`WARN: ${message}`, ...args));
     }
 
     static error(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`❌ ${message}`, ...args));
+        this.getOutputChannel().appendLine(this.formatMessage(`ERROR: ${message}`, ...args));
     }
 
     static info(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`ℹ ${message}`, ...args));
+        this.getOutputChannel().appendLine(this.formatMessage(`INFO: ${message}`, ...args));
     }
 
     static debug(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`🐛 ${message}`, ...args));
-    }
-
-    // Convenience methods for common logging patterns
+        this.getOutputChannel().appendLine(this.formatMessage(`DEBUG: ${message}`, ...args));
+    }    // Convenience methods for common logging patterns
     static logSuccess(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`✓ ${message}`, ...args));
+        this.getOutputChannel().appendLine(this.formatMessage(`SUCCESS: ${message}`, ...args));
     }
 
     static logFailure(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`✗ ${message}`, ...args));
+        this.getOutputChannel().appendLine(this.formatMessage(`FAILURE: ${message}`, ...args));
     }
 
     static logWarning(message: string, ...args: any[]): void {
-        this.getOutputChannel().appendLine(this.formatMessage(`⚠ ${message}`, ...args));
+        this.getOutputChannel().appendLine(this.formatMessage(`WARNING: ${message}`, ...args));
     }
 
     static logProgress(message: string, ...args: any[]): void {
