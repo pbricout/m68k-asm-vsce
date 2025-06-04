@@ -73,7 +73,7 @@ const fallbackPath = getIncludeFallbackPath(projectRoot);
 
 ### Path Resolution Test
 
-```
+```text
 Include Path: "ASM_LIBS\MACROS.I"
 Base Dir: "c:\Users\Patrick\ShadowDrive\Dev\Projects\m68K-assembly-extension"
 ✅ SUCCESS: Include file found at: "c:\Users\Patrick\ShadowDrive\Dev\Projects\m68K-assembly-extension\ASM_LIBS\MACROS.I"

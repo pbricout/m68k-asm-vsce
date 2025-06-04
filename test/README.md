@@ -4,7 +4,7 @@ This directory contains all tests and test-related files for the M68K Assembly V
 
 ## Directory Structure
 
-```
+```text
 test/
 ├── run-all-tests.js          # Main test runner script
 ├── README.md                 # This file
