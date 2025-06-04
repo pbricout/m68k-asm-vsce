@@ -38,6 +38,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerFoldingRangeProvider(selector, new M68kFoldingProvider())
     );
 
+    // Register restart language server command
+    context.subscriptions.push(
+        vscode.commands.registerCommand('m68kAsm.restartLanguageServer', () => {
+            vscode.window.showInformationMessage('Restarting M68K Assembly extension (reloading window)...');
+            vscode.commands.executeCommand('workbench.action.reloadWindow');
+        })
+    );
+
     console.log('M68K Assembly extension activated');
 }
 

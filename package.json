@@ -15,7 +15,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage:m68k-asm"
+    "onLanguage:m68k-asm",
+    "onCommand:m68kAsm.restartLanguageServer"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -43,6 +44,13 @@
         "language": "m68k-asm",
         "scopeName": "source.m68k-asm",
         "path": "./syntaxes/m68k-asm.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "m68kAsm.restartLanguageServer",
+        "title": "M68K Assembly: Restart Language Server",
+        "category": "M68K Assembly"
       }
     ],
     "configuration": {
