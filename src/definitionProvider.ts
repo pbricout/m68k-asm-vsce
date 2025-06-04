@@ -4,8 +4,7 @@ import * as fs from 'fs';
 import { resolveIncludePath, getProjectRoot, getIncludeFallbackPath } from './includeUtils';
 import { M68kLogger } from './logger';
 
-export class M68kDefinitionProvider implements vscode.DefinitionProvider {
-    provideDefinition(
+export class M68kDefinitionProvider implements vscode.DefinitionProvider {    provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
@@ -14,12 +13,47 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {
         if (!wordRange) {
             return null;
         }
-        const word = document.getText(wordRange);
+        const word = document.getText(wordRange);        const line = document.lineAt(position.line).text;
+        
+        // Check if the cursor is on an include statement
+        const includeMatch = line.match(/^\s*include\s+["']?([^"'\s]+)["']?/i);
+        if (includeMatch) {
+            const includePath = includeMatch[1];
+            // Find the actual position of the include path in the line
+            const includeKeywordMatch = line.match(/^\s*include\s+/i);
+            if (includeKeywordMatch) {
+                const includeStartIndex = includeKeywordMatch[0].length + (line.substring(includeKeywordMatch[0].length).match(/^["']?/)?.[0].length || 0);
+                const includeEndIndex = includeStartIndex + includePath.length;
+                const cursorIndex = position.character;
+                
+                M68kLogger.log(`Include detection: line="${line.trim()}", path="${includePath}", cursor=${cursorIndex}, range=[${includeStartIndex},${includeEndIndex}]`);
+                
+                if (cursorIndex >= includeStartIndex && cursorIndex <= includeEndIndex) {
+                    // Cursor is on the include path, resolve it to a file
+                    const mainFilePath = document.uri.fsPath;
+                    const baseDir = path.dirname(mainFilePath);
+                    const projectRoot = getProjectRoot(document);
+                    const fallbackPath = getIncludeFallbackPath(projectRoot);
+                    
+                    M68kLogger.log(`Resolving include path: "${includePath}"`);
+                    const resolved = resolveIncludePath(includePath, baseDir, projectRoot, fallbackPath);
+                    if (resolved && fs.existsSync(resolved)) {
+                        M68kLogger.logSuccess(`Include resolved to: ${resolved}`);
+                        return new vscode.Location(vscode.Uri.file(resolved), new vscode.Position(0, 0));
+                    } else {
+                        M68kLogger.logFailure(`Include file not found: ${includePath}`);
+                        return null;
+                    }
+                }
+            }
+        }
+          // If not on an include path, proceed with label search
         const mainFilePath = document.uri.fsPath;
         const baseDir = path.dirname(mainFilePath);
         const projectRoot = getProjectRoot(document);
         const fallbackPath = getIncludeFallbackPath(projectRoot);
-          // Recursively search for label/constant definition in main and included files
+        
+        // Recursively search for label/constant definition in main and included files
         const findLabelDefinitionRecursive = (filePath: string, baseDir: string, labelName: string, visited = new Set<string>()): vscode.Location | null => {
             if (visited.has(filePath)) return null;
             visited.add(filePath);
