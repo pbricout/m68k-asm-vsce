@@ -52,6 +52,7 @@ The extension must provide syntax highlighting for:
 ### 3.1 Hover Information
 
 **Requirements:**
+
 - Display detailed information when hovering over any supported element
 - Show instruction descriptions, syntax, and cycle timing information
 - Display register descriptions for M68K registers
@@ -59,6 +60,7 @@ The extension must provide syntax highlighting for:
 - Include file path and line number for symbol definitions
 
 **Implementation:**
+
 - Hover provider must implement `vscode.HoverProvider`
 - Support for instructions, registers, directives, and user symbols
 - Context-aware timing information based on addressing modes
@@ -67,12 +69,14 @@ The extension must provide syntax highlighting for:
 ### 3.2 Go to Definition
 
 **Requirements:**
+
 - Navigate to symbol definitions with Ctrl+Click or F12
 - Support for labels, constants (EQU), and macro definitions
 - Cross-file navigation through INCLUDE statements
 - Navigate to included files when clicking on include paths
 
 **Implementation:**
+
 - Definition provider must implement `vscode.DefinitionProvider`
 - Resolve symbols across multiple files and include chains
 - Handle local label scoping (visible only between global labels)
@@ -81,12 +85,14 @@ The extension must provide syntax highlighting for:
 ### 3.3 Find All References
 
 **Requirements:**
+
 - Find all occurrences of labels, constants, and user-defined symbols
 - Search across all files in the project including included files
 - Exclude false positives (e.g., instruction mnemonics, registers)
 - Respect local label scoping rules
 
 **Implementation:**
+
 - Reference provider must implement `vscode.ReferenceProvider`
 - Return array of `vscode.Location` objects
 - Include context information for each reference
@@ -94,12 +100,14 @@ The extension must provide syntax highlighting for:
 ### 3.4 Rename Symbol
 
 **Requirements:**
+
 - Safely rename user-defined symbols (labels, constants)
 - Update all references across the project
 - Validate new symbol names according to assembly syntax rules
 - Respect local label scoping
 
 **Implementation:**
+
 - Rename provider must implement `vscode.RenameProvider`
 - Implement `prepareRename` for validation
 - Return `vscode.WorkspaceEdit` with all necessary changes
@@ -109,11 +117,13 @@ The extension must provide syntax highlighting for:
 ### 4.1 Document Outline
 
 **Requirements:**
+
 - Display hierarchical view of symbols in the current document
 - Show labels, constants, macros, and sections
 - Enable quick navigation to symbols
 
 **Implementation:**
+
 - Symbol provider must implement `vscode.DocumentSymbolProvider`
 - Return `vscode.DocumentSymbol` array with appropriate symbol kinds
 - Support nested symbols (e.g., labels within sections)
@@ -121,6 +131,7 @@ The extension must provide syntax highlighting for:
 ### 4.2 Code Folding
 
 **Requirements:**
+
 - Fold sections (SECTION, BSS, DATA, TEXT)
 - Fold macro definitions (MACRO to ENDM)
 - Fold conditional blocks (IF to ENDIF)
@@ -129,6 +140,7 @@ The extension must provide syntax highlighting for:
 - Support manual regions (`; #region` and `; #endregion`)
 
 **Implementation:**
+
 - Folding provider must implement `vscode.FoldingRangeProvider`
 - Return `vscode.FoldingRange` array with appropriate folding kinds
 - Support regex-based folding markers in language configuration
@@ -138,6 +150,7 @@ The extension must provide syntax highlighting for:
 ### 5.1 Instruction Set
 
 **Requirements:**
+
 - Support complete M68000 instruction set
 - All data movement instructions (MOVE, MOVEA, MOVEM, etc.)
 - All arithmetic instructions (ADD, SUB, MUL, DIV, etc.)
@@ -150,6 +163,7 @@ The extension must provide syntax highlighting for:
 ### 5.2 Addressing Modes
 
 **Requirements:**
+
 - Data register direct (Dn)
 - Address register direct (An)
 - Address register indirect ((An))
@@ -164,6 +178,7 @@ The extension must provide syntax highlighting for:
 ### 5.3 Assembler Directives
 
 **Requirements:**
+
 - **ORG**: Set origin address
 - **EQU**: Equate symbol to value
 - **DC**: Define constant (.b, .w, .l)
@@ -179,6 +194,7 @@ The extension must provide syntax highlighting for:
 ### 5.4 Comment Styles
 
 **Requirements:**
+
 - Line comments starting with `;`
 - Block comments `/* */`
 - Support for comments starting with `*` (planned feature)
@@ -188,6 +204,7 @@ The extension must provide syntax highlighting for:
 ### 6.1 Include Resolution
 
 **Requirements:**
+
 - Support INCLUDE directive for file inclusion
 - Resolve include paths in the following order:
   1. Relative to the current file
@@ -200,6 +217,7 @@ The extension must provide syntax highlighting for:
 ### 6.2 Cross-File Features
 
 **Requirements:**
+
 - All language features must work across included files
 - Symbol resolution through include chains
 - Go to Definition for symbols in included files
@@ -211,12 +229,14 @@ The extension must provide syntax highlighting for:
 ### 7.1 VS Code Settings
 
 **Requirements:**
+
 - `m68kAsm.enableHover`: Enable/disable hover information (default: true)
 - `m68kAsm.enableGoToDefinition`: Enable/disable go to definition (default: true)
 
 ### 7.2 Project Configuration
 
 **Requirements:**
+
 - Support for `m68kasmconfig.json` in project root
 - Configuration options for include fallback paths
 - Future support for multiple fallback paths (array configuration)
@@ -241,6 +261,7 @@ The extension must provide syntax highlighting for:
 ### 9.1 Graceful Degradation
 
 **Requirements:**
+
 - Extension must not crash on malformed assembly code
 - Provide meaningful error messages for configuration issues
 - Continue functioning when some files are inaccessible
@@ -249,6 +270,7 @@ The extension must provide syntax highlighting for:
 ### 9.2 Logging
 
 **Requirements:**
+
 - Structured logging system for debugging
 - Different log levels (info, warning, error)
 - Output channel for user-accessible logs
@@ -258,6 +280,7 @@ The extension must provide syntax highlighting for:
 ### 10.1 Language Configuration
 
 **Requirements:**
+
 - Auto-closing pairs for brackets and quotes
 - Appropriate word boundaries for assembly syntax
 - Comment toggling support
@@ -266,6 +289,7 @@ The extension must provide syntax highlighting for:
 ### 10.2 Commands
 
 **Requirements:**
+
 - `m68kAsm.restartLanguageServer`: Restart language services
 - `m68kAsm.showOutput`: Show extension output logs
 
@@ -274,6 +298,7 @@ The extension must provide syntax highlighting for:
 ### 11.1 Global Labels
 
 **Requirements:**
+
 - Labels without leading dot are global
 - Visible throughout the file and included files
 - Can be referenced from anywhere in the project
@@ -281,6 +306,7 @@ The extension must provide syntax highlighting for:
 ### 11.2 Local Labels
 
 **Requirements:**
+
 - Labels starting with `.` (dot) are local
 - Visible only between two global labels
 - Only one instance allowed per global label section
@@ -289,6 +315,7 @@ The extension must provide syntax highlighting for:
 ### 11.3 Constants
 
 **Requirements:**
+
 - EQU-defined symbols are global by default
 - Can be referenced from anywhere in the project
 - Support for different value types (numeric, string, expression)
@@ -298,6 +325,7 @@ The extension must provide syntax highlighting for:
 ### 12.1 Instruction Timing
 
 **Requirements:**
+
 - Display cycle counts for M68K instructions
 - Context-aware timing based on addressing modes
 - Show read/write cycle breakdown
@@ -306,6 +334,7 @@ The extension must provide syntax highlighting for:
 ### 12.2 Timing Display
 
 **Requirements:**
+
 - Base cycle counts for each instruction
 - Additional cycles for addressing modes
 - Special cases (e.g., MOVEM with register count)
@@ -316,6 +345,7 @@ The extension must provide syntax highlighting for:
 ### 13.1 Unit Tests
 
 **Requirements:**
+
 - Test all language providers individually
 - Test symbol resolution logic
 - Test include path resolution
@@ -324,6 +354,7 @@ The extension must provide syntax highlighting for:
 ### 13.2 Integration Tests
 
 **Requirements:**
+
 - Test cross-file navigation
 - Test complete include chains
 - Test large project performance

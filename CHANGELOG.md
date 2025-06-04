@@ -6,8 +6,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 # [1.7.0](https://github.com/pbricout/m68k-assembly/compare/v1.6.1...v1.7.0) (2025-06-04)
 
-
-
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
@@ -16,6 +14,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [1.6.1](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.1) (2025-06-04)
 
+### Features
+
+* Add comprehensive npm test command and reorganize test structure ([5202899](https://github.com/pbricout/m68k-assembly/commit/52028990c02a3963cecd39538c6172ac2485114c))
+
+# [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.0) (2025-06-04)
 
 ### Features
 
@@ -23,21 +26,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 # [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.0) (2025-06-04)
 
-
 ### Features
 
 * Add comprehensive npm test command and reorganize test structure ([5202899](https://github.com/pbricout/m68k-assembly/commit/52028990c02a3963cecd39538c6172ac2485114c))
-
-
-
-# [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.0) (2025-06-04)
-
-
-### Features
-
-* Add comprehensive npm test command and reorganize test structure ([5202899](https://github.com/pbricout/m68k-assembly/commit/52028990c02a3963cecd39538c6172ac2485114c))
-
-
 
 # Changelog
 
@@ -47,7 +38,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [1.5.0](https://github.com/pbricout/m68k-assembly/compare/v1.4.1...v1.5.0) (2025-06-04)
 
-
 ### Features
 
 * add comprehensive macro and symbol definition support ([d2c7149](https://github.com/pbricout/m68k-assembly/commit/d2c7149de382ab674f40aeb1324d873917a887e5))
@@ -55,7 +45,6 @@ All notable changes to this project will be documented in this file. See [standa
 * enhance TextMate grammar with conditional assembly directive patterns for proper syntax highlighting
 
 ### [1.4.1](https://github.com/pbricout/m68k-assembly/compare/v1.4.0...v1.4.1) (2025-06-04)
-
 
 ### Bug Fixes
 
@@ -65,13 +54,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [1.3.0](https://github.com/pbricout/m68k-assembly/compare/v1.2.0...v1.3.0) (2025-06-04)
 
-
 ### Features
 
 * enhance logger to use VS Code output channel ([42d8264](https://github.com/pbricout/m68k-assembly/commit/42d8264f57babb24656be91ad35747fdd0e11ee5))
 
 ## [1.2.0](https://github.com/pbricout/m68k-assembly/compare/v1.1.3...v1.2.0) (2025-06-04)
-
 
 ### Features
 
@@ -95,7 +82,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [1.0.2](https://github.com/pbricout/m68k-assembly/compare/v1.0.1...v1.0.2) (2025-06-03)
 
-
 #### Features
 
 * **tooling:** add markdown linting support ([abc1234](commit-hash))
@@ -107,17 +93,13 @@ All notable changes to this project will be documented in this file. See [standa
 * update with markdown lint rules ([jkl3456](commit-hash))
 * add version management guidelines ([mno7890](commit-hash))
 
-
 ### [1.0.1](https://github.com/pbricout/m68k-assembly/compare/v1.0.0...v1.0.1) (2025-05-20)
-
 
 #### Bug Fixes
 
 * various improvements and initial bug fixes ([pqr1234](commit-hash))
 
-
 ### [1.0.0](https://github.com/pbricout/m68k-assembly/compare/v0.0.0...v1.0.0) (2025-05-01)
-
 
 #### Features
 

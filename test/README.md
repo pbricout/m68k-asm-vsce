@@ -34,56 +34,71 @@ test/
 ## Test Categories
 
 ### 1. Include Fix Tests (`include-fix/`)
+
 Tests specifically for the include statement resolution bug that was fixed. These tests verify that:
+
 - Include statements are properly detected
 - File paths are correctly resolved across platforms
 - Fallback paths work correctly
 - The fix handles both Windows and Unix-style paths
 
 **Key Files:**
+
 - `test-include-debug.ts` - Debug utilities for include testing
 - `test-include-functionality.ts` - Functional tests for include resolution
 - `test-main.s` - Test assembly file with include statements
 
 ### 2. Integration Tests (`integration/`)
+
 Comprehensive tests that validate the extension's overall functionality:
+
 - Module compilation verification
 - Pattern recognition testing
 - File parsing validation
 - Configuration checking
 
 **Key Files:**
+
 - `standalone-test.ts` - Main integration test (can run without VS Code)
 - `test-integration.ts` - VS Code-specific integration test
 - `test-fix-verification.ts` - Verification that fixes work correctly
 
 ### 3. Unit Tests (`unit/`)
+
 Individual component tests for specific functionality areas.
 
 ### 4. Verification Scripts (`verification/`)
+
 Standalone scripts that demonstrate and verify fixes:
+
 - `demo-include-fix.js` - Shows the include fix in action
 - `verify-include-fix.js` - Automated verification of include functionality
 
 ### 5. Demo Files (`demos/`)
+
 Assembly files used for testing various extension features:
+
 - `comprehensive-folding-test.s` - Tests code folding functionality
 - `test-folding.s` - Additional folding tests
 
 ### 6. Fixtures (`fixtures/`)
+
 Test data and sample files:
+
 - `ASM_LIBS/MACROS.I` - Test include file in library directory
 - `includes/MACROS.I` - Fallback include file
 
 ## Running Tests
 
 ### Run All Tests
+
 ```bash
 cd test
 node run-all-tests.js
 ```
 
 ### Run Specific Test Categories
+
 ```bash
 # Integration tests
 cd integration
@@ -96,7 +111,9 @@ node verify-include-fix.js
 ```
 
 ### TypeScript Tests
+
 Make sure to compile TypeScript tests first:
+
 ```bash
 # From project root
 npm run compile
@@ -113,6 +130,7 @@ npm run compile
 ## Recent Changes
 
 The test directory was recently reorganized (June 2025) to:
+
 - ✅ Move all test files from the project root into proper subdirectories
 - ✅ Separate concerns (unit vs integration vs verification)
 - ✅ Remove duplicate files
