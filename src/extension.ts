@@ -11,6 +11,8 @@ import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
     M68kLogger.log('Extension activating...');
+    M68kLogger.info('M68K Assembly extension logs are now available in the "M68K Assembly" output channel');
+    M68kLogger.info('Use "M68K Assembly: Show Output" command to view logs');
     
     // Setup config path and load config once at startup
     const wsFolders = vscode.workspace.workspaceFolders;
@@ -57,8 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Register folding range provider for custom folding
     context.subscriptions.push(
-        vscode.languages.registerFoldingRangeProvider(selector, new M68kFoldingProvider())
-    );    // Register restart language server command
+        vscode.languages.registerFoldingRangeProvider(selector, new M68kFoldingProvider())    );    // Register restart language server command
     context.subscriptions.push(
         vscode.commands.registerCommand('m68kAsm.restartLanguageServer', () => {
             M68kLogger.log('Restart command executed');
@@ -67,11 +68,20 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // Register show output command
+    context.subscriptions.push(
+        vscode.commands.registerCommand('m68kAsm.showOutput', () => {
+            M68kLogger.log('Show output command executed');
+            M68kLogger.show();
+        })
+    );
+
     M68kLogger.logSuccess('Extension activated successfully');
 }
 
 export function deactivate() {
-    M68kLogger.log('Extension deactivated');
+    M68kLogger.log('Extension deactivating...');
+    M68kLogger.dispose();
 }
 
 class M68kFoldingProvider implements vscode.FoldingRangeProvider {

@@ -45,11 +45,15 @@
         "scopeName": "source.m68k-asm",
         "path": "./syntaxes/m68k-asm.tmLanguage.json"
       }
-    ],
-    "commands": [
+    ],    "commands": [
       {
         "command": "m68kAsm.restartLanguageServer",
         "title": "M68K Assembly: Restart Language Server",
+        "category": "M68K Assembly"
+      },
+      {
+        "command": "m68kAsm.showOutput",
+        "title": "M68K Assembly: Show Output",
         "category": "M68K Assembly"
       }
     ],
