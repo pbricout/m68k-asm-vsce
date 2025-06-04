@@ -40,9 +40,8 @@ export class M68kRegexPatterns {
     // Assignment patterns
     static assignmentDefinition(symbolName: string): RegExp {
         return new RegExp(`^\\s*(${this.escapeSymbol(symbolName)})\\s*=`, 'i');
-    }
-      // Include patterns
-    static readonly INCLUDE_STATEMENT = /^\s*include\s+["']?([^"'\s]+)["']?/i;
+    }    // Include patterns
+    static readonly INCLUDE_STATEMENT = /^\s*include\s+(?:["']([^"']+)["']|(\S+))/i;
     
     // Section patterns
     static readonly SECTION_DEFINITION = /^\s*section\s+["']?([^"',\s]+)["']?/i;

@@ -312,7 +312,8 @@ export class M68kFileParser {
         const currentDir = path.dirname(currentFilePath);        for (const line of lines) {
             const includeMatch = line.match(M68kRegexPatterns.INCLUDE_STATEMENT);
             if (includeMatch) {
-                const includePath = includeMatch[1].replace(/['"]/g, '');                try {
+                // Extract the path - could be in group 1 (quoted) or group 2 (unquoted)
+                const includePath = includeMatch[1] || includeMatch[2];                try {
                     // Get project root from workspace
                     const workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(currentFilePath));
                     const projectRoot = workspaceFolder ? workspaceFolder.uri.fsPath : currentDir;

@@ -17,15 +17,19 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {    pr
         }
         const word = document.getText(wordRange);
         const line = document.lineAt(position.line).text;
-        
-        // Check if the cursor is on an include statement
+          // Check if the cursor is on an include statement
         const includeMatch = line.match(M68kRegexPatterns.INCLUDE_STATEMENT);
         if (includeMatch) {
-            const includePath = includeMatch[1];
+            // Extract the path - could be in group 1 (quoted) or group 2 (unquoted)
+            const includePath = includeMatch[1] || includeMatch[2];
+            
             // Find the actual position of the include path in the line
             const includeKeywordMatch = line.match(/^\s*include\s+/i);
             if (includeKeywordMatch) {
-                const includeStartIndex = includeKeywordMatch[0].length + (line.substring(includeKeywordMatch[0].length).match(/^["']?/)?.[0].length || 0);
+                // Find the start of the path (after 'include' keyword and optional quote)
+                const afterKeyword = line.substring(includeKeywordMatch[0].length);
+                const quoteMatch = afterKeyword.match(/^["']?/);
+                const includeStartIndex = includeKeywordMatch[0].length + (quoteMatch?.[0].length || 0);
                 const includeEndIndex = includeStartIndex + includePath.length;
                 const cursorIndex = position.character;
                 
