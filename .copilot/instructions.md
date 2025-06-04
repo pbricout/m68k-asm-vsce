@@ -111,6 +111,8 @@ This is a Visual Studio Code extension that provides comprehensive language supp
 - Use consistent documentation style across all markdown files
 - Keep commit messages and PR descriptions well-formatted according to these rules
 - Install markdownlint extension (DavidAnson.vscode-markdownlint) in development environment
+- Development documentations (status, process, fixes, todo, etc) are located in the folder docs\dev
+- Reference documentations (68000 cyles, assembler manual, etc,) are located in the folder docs\references
 
 ### Testing
 
