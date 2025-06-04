@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/pbricout/m68k-assembly/compare/v1.8.0...v1.8.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* Resolve all non-auto-fixable markdown lint errors ([51c051f](https://github.com/pbricout/m68k-assembly/commit/51c051fb86ebd704a107fb07f9b169068c7b7317))
+
 ## [1.8.0](https://github.com/pbricout/m68k-assembly/compare/v1.6.1...v1.8.0) (2025-06-04)
 
 ## [1.7.0](https://github.com/pbricout/m68k-assembly/compare/v1.6.1...v1.7.0) (2025-06-04)
