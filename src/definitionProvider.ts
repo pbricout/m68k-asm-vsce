@@ -30,31 +30,32 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {
             M68kLogger.log(`Skipping definition for reserved word: ${word.toUpperCase()}`);
             return null;
         }
+          const line = document.lineAt(position.line).text;
         
-        const line = document.lineAt(position.line).text;          // Check if the cursor is on an include statement
-        const includeMatch = line.match(M68kRegexPatterns.INCLUDE_STATEMENT);
+        // Check if the cursor is on an include or incbin statement
+        const includeMatch = line.match(M68kRegexPatterns.INCLUDE_PATH_PATTERN);
         if (includeMatch) {
-            // Extract the path - could be in group 1 (quoted) or group 2 (unquoted)
-            const includePath = includeMatch[1] || includeMatch[2];
+            // Extract the path - could be in group 2 (quoted) or group 3 (unquoted)
+            const includePath = includeMatch[2] || includeMatch[3];
             
             // Find the actual position of the include path in the line
             const includeStartIndex = line.indexOf(includePath);
             const includeEndIndex = includeStartIndex + includePath.length;
             const cursorIndex = position.character;
             
-            M68kLogger.log(`Include detection: line="${line.trim()}", path="${includePath}", cursor=${cursorIndex}, range=[${includeStartIndex},${includeEndIndex}]`);
+            M68kLogger.log(`Include/incbin detection: line="${line.trim()}", path="${includePath}", cursor=${cursorIndex}, range=[${includeStartIndex},${includeEndIndex}]`);
             
             if (cursorIndex >= includeStartIndex && cursorIndex <= includeEndIndex) {
                 // Cursor is on the include path, resolve it to a file
                 const context = M68kFileParser.createParseContext(document);
                 
-                M68kLogger.log(`Resolving include path: "${includePath}"`);
+                M68kLogger.log(`Resolving include/incbin path: "${includePath}"`);
                 const resolved = resolveIncludePath(includePath, context.baseDir, context.projectRoot, context.fallbackPath);
                 if (resolved && fs.existsSync(resolved)) {
-                    M68kLogger.logSuccess(`Include resolved to: ${resolved}`);
+                    M68kLogger.logSuccess(`Include/incbin resolved to: ${resolved}`);
                     return new vscode.Location(vscode.Uri.file(resolved), new vscode.Position(0, 0));
                 } else {
-                    M68kLogger.logFailure(`Include file not found: ${includePath}`);
+                    M68kLogger.logFailure(`Include/incbin file not found: ${includePath}`);
                     return null;
                 }
             }
