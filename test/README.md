@@ -16,6 +16,13 @@ test/
 │   │   └── MACROS.I         # Test include file
 │   └── includes/
 │       └── MACROS.I         # Fallback include file
+├── hover-include/            # Tests for include/incbin path hover functionality
+│   ├── README.md            # Documentation for hover tests
+│   ├── test-hover-include.s # Main test file with include directives
+│   └── fixtures/            # Test fixture files for path resolution
+│       ├── path/            # Standard path fixtures
+│       ├── quoted/path/     # Quoted path fixtures
+│       └── single-quoted/path/ # Single-quoted path fixtures
 ├── include-fix/              # Tests for include statement resolution fix
 │   ├── test-include-debug.ts
 │   ├── test-include-functionality.ts
@@ -28,6 +35,7 @@ test/
 │   └── (unit test files)
 └── verification/             # Verification and demo scripts
     ├── demo-include-fix.js   # Demonstrates the include fix working
+    ├── test-include-hover.ts # Verification script for hover functionality
     └── verify-include-fix.js # Verifies the include functionality
 ```
 
@@ -67,21 +75,31 @@ Comprehensive tests that validate the extension's overall functionality:
 
 Individual component tests for specific functionality areas.
 
-### 4. Verification Scripts (`verification/`)
+### 4. Hover Include Tests (`hover-include/`)
+
+Tests for the include/incbin path resolution hover functionality:
+
+- `test-hover-include.s` - Assembly file with various include/incbin directives
+- `fixtures/` - Test fixture files for path resolution testing
+- Tests both quoted and unquoted path formats
+- Verifies workspace-relative path display
+
+### 5. Verification Scripts (`verification/`)
 
 Standalone scripts that demonstrate and verify fixes:
 
 - `demo-include-fix.js` - Shows the include fix in action
+- `test-include-hover.ts` - Verification script for hover path resolution
 - `verify-include-fix.js` - Automated verification of include functionality
 
-### 5. Demo Files (`demos/`)
+### 6. Demo Files (`demos/`)
 
 Assembly files used for testing various extension features:
 
 - `comprehensive-folding-test.s` - Tests code folding functionality
 - `test-folding.s` - Additional folding tests
 
-### 6. Fixtures (`fixtures/`)
+### 7. Fixtures (`fixtures/`)
 
 Test data and sample files:
 

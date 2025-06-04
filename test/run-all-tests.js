@@ -18,6 +18,11 @@ const testCategories = {
         files: ['test-include-debug.ts', 'test-include-functionality.ts'],
         description: 'Tests for the include statement resolution fix'
     },
+    'Hover Include Tests': {
+        directory: 'hover-include',
+        files: ['test-hover-include.s'],
+        description: 'Tests for include/incbin path hover functionality'
+    },
     'Integration Tests': {
         directory: 'integration',
         files: ['standalone-test.ts', 'test-integration.ts', 'test-fix-verification.ts'],
@@ -27,10 +32,9 @@ const testCategories = {
         directory: 'unit',
         files: [],
         description: 'Unit tests for individual components'
-    },
-    'Verification Scripts': {
+    },    'Verification Scripts': {
         directory: 'verification',
-        files: ['demo-include-fix.js', 'verify-include-fix.js'],
+        files: ['demo-include-fix.js', 'test-include-hover.ts', 'verify-include-fix.js'],
         description: 'Scripts to verify fixes and functionality'
     },
     'Demo Files': {
