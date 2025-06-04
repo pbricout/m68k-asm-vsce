@@ -5,20 +5,28 @@ import { getConfig } from './config';
 import { M68kLogger } from './logger';
 
 export function resolveIncludePath(includePath: string, baseDir: string, projectRoot: string, fallbackPath: string): string | null {
-    // Normalize path separators for cross-platform compatibility
-    const normalizedIncludePath = includePath.replace(/\\/g, '/');
+    // Clean up the include path by removing quotes and trimming
+    const cleanPath = includePath.replace(/['"]/g, '').trim();
     
     // Try paths in order of preference
     const searchPaths = [baseDir, projectRoot, fallbackPath];
     
     for (const searchDir of searchPaths) {
-        const candidate = path.resolve(searchDir, normalizedIncludePath);
+        // Use path.resolve to handle cross-platform path resolution
+        // This will automatically handle backslashes on Windows and forward slashes on Unix
+        const candidate = path.resolve(searchDir, cleanPath);
+        
+        M68kLogger.log(`Checking include path: "${searchDir}" + "${cleanPath}" = "${candidate}"`);
+        
         if (fs.existsSync(candidate)) {
+            M68kLogger.logSuccess(`Include file found: "${candidate}"`);
             return candidate;
         }
     }
     
-    M68kLogger.logFailure(`Include file not found: "${includePath}"`);
+    // Additional logging for debugging
+    M68kLogger.logFailure(`Include file not found: "${cleanPath}"`);
+    M68kLogger.log(`Search paths tried: ${searchPaths.join(', ')}`);
     return null;
 }
 

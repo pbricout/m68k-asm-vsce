@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { M68kRegexPatterns } from './regexPatterns';
 import { M68kLogger } from './logger';
-import { resolveIncludePath } from './includeUtils';
+import { resolveIncludePath, getIncludeFallbackPath } from './includeUtils';
 import { getConfig } from './config';
 
 export interface ParseContext {
@@ -313,15 +313,19 @@ export class M68kFileParser {
             const includeMatch = line.match(M68kRegexPatterns.INCLUDE_STATEMENT);
             if (includeMatch) {
                 const includePath = includeMatch[1].replace(/['"]/g, '');                try {
-                    // Get project root and fallback path from config
+                    // Get project root from workspace
                     const workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(currentFilePath));
                     const projectRoot = workspaceFolder ? workspaceFolder.uri.fsPath : currentDir;
-                    const config = getConfig();
-                    const fallbackPath = config.includeFallbackPath || './includes';
+                    
+                    // Use the dedicated function to get fallback path
+                    const fallbackPath = getIncludeFallbackPath(projectRoot);
+                    
+                    M68kLogger.log(`Resolving include: "${includePath}" from base: "${currentDir}", project: "${projectRoot}", fallback: "${fallbackPath}"`);
                     
                     const resolvedPath = resolveIncludePath(includePath, currentDir, projectRoot, fallbackPath);
                     if (resolvedPath && fs.existsSync(resolvedPath)) {
                         includeFiles.push(resolvedPath);
+                        M68kLogger.logSuccess(`Added include file: "${resolvedPath}"`);
                     }
                 } catch (error) {
                     M68kLogger.warn(`Could not resolve include path: ${includePath}`, error);
