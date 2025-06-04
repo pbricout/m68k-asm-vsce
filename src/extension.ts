@@ -4,8 +4,21 @@ import { M68kReferenceProvider } from './referenceProvider';
 import { M68kRenameProvider } from './renameProvider';
 import { M68kHoverProvider } from './hoverProvider';
 import { M68kDocumentSymbolProvider } from './symbolProvider';
+import { setConfigPath, loadConfig, watchConfig } from './config';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
+    // Setup config path and load config once at startup
+    const wsFolders = vscode.workspace.workspaceFolders;
+    const projectRoot = wsFolders && wsFolders.length > 0 ? wsFolders[0].uri.fsPath : process.cwd();
+    setConfigPath(projectRoot);
+    loadConfig();
+    // Watch for config file changes and reload
+    watchConfig(() => {
+        vscode.window.showInformationMessage('M68K Assembly config reloaded from m68kasmconfig.json');
+    });
+
     const selector: vscode.DocumentSelector = { language: 'm68k-asm', scheme: 'file' };
 
     // Register definition provider
@@ -55,12 +68,9 @@ class M68kFoldingProvider implements vscode.FoldingRangeProvider {
     provideFoldingRanges(document: vscode.TextDocument): vscode.FoldingRange[] {
         const ranges: vscode.FoldingRange[] = [];
         const lines = document.getText().split('\n');
-        
         let regionStart: number | null = null;
-        
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
-            
             // Handle region folding
             if (line.match(/^;\s*#region\b/i)) {
                 regionStart = i;
@@ -68,7 +78,6 @@ class M68kFoldingProvider implements vscode.FoldingRangeProvider {
                 ranges.push(new vscode.FoldingRange(regionStart, i));
                 regionStart = null;
             }
-            
             // Handle macro folding
             if (line.match(/^\s*\w+\s+macro\b/i)) {
                 const macroStart = i;
@@ -79,7 +88,6 @@ class M68kFoldingProvider implements vscode.FoldingRangeProvider {
                     }
                 }
             }
-            
             // Handle multi-line comments
             const blockCommentStart = line.indexOf('/*');
             if (blockCommentStart !== -1) {
@@ -93,7 +101,6 @@ class M68kFoldingProvider implements vscode.FoldingRangeProvider {
                 }
             }
         }
-        
         return ranges;
     }
 }

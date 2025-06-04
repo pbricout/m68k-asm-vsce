@@ -1,30 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { resolveIncludePath } from './includeUtils';
-
-function getProjectRoot(document: vscode.TextDocument): string {
-    const wsFolders = vscode.workspace.workspaceFolders;
-    if (!wsFolders) return path.dirname(document.uri.fsPath);
-    const containing = wsFolders.find(f => document.uri.fsPath.startsWith(f.uri.fsPath));
-    return containing ? containing.uri.fsPath : wsFolders[0].uri.fsPath;
-}
-
-function getIncludeFallbackPath(projectRoot: string): string {
-    const configPath = path.join(projectRoot, 'm68kasmconfig.json');
-    if (fs.existsSync(configPath)) {
-        try {
-            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-            if (config.includeFallbackPath) {
-                // If absolute, use as-is; if relative, resolve from project root
-                return path.isAbsolute(config.includeFallbackPath)
-                    ? config.includeFallbackPath
-                    : path.resolve(projectRoot, config.includeFallbackPath);
-            }
-        } catch {}
-    }
-    return projectRoot;
-}
+import { resolveIncludePath, getProjectRoot, getIncludeFallbackPath } from './includeUtils';
 
 export class M68kDefinitionProvider implements vscode.DefinitionProvider {
     provideDefinition(
