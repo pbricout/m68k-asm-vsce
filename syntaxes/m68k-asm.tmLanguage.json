@@ -90,8 +90,7 @@
           }
         }
       ]
-    },
-    "conditionals": {
+    },    "conditionals": {
       "patterns": [
         {
           "name": "meta.if.block.m68k-asm",
@@ -100,6 +99,69 @@
             "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
           },
           "end": "\\b(?i)(endif)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.end.m68k-asm" }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
+        },
+        {
+          "name": "meta.ifnd.block.m68k-asm",
+          "begin": "\\b(?i)(ifnd)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
+          },
+          "end": "\\b(?i)(endc)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.end.m68k-asm" }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]        },
+        {
+          "name": "meta.ifd.block.m68k-asm",
+          "begin": "\\b(?i)(ifd)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
+          },
+          "end": "\\b(?i)(endc)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.end.m68k-asm" }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
+        },
+        {
+          "name": "meta.ifdef.block.m68k-asm",
+          "begin": "\\b(?i)(ifdef)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
+          },
+          "end": "\\b(?i)(endc)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.end.m68k-asm" }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
+        },
+        {
+          "name": "meta.ifndef.block.m68k-asm",
+          "begin": "\\b(?i)(ifndef)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
+          },
+          "end": "\\b(?i)(endc)\\b",
           "endCaptures": {
             "1": { "name": "keyword.control.conditional.end.m68k-asm" }
           },

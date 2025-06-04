@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import { M68kSymbolValidator } from './symbolValidator';
+import { M68kFileParser } from './fileParser';
+import { M68kLogger } from './logger';
 
 export class M68kRenameProvider implements vscode.RenameProvider {
     
@@ -15,17 +18,17 @@ export class M68kRenameProvider implements vscode.RenameProvider {
         
         const word = document.getText(wordRange);
         
-        // Check if this is a valid symbol that can be renamed
-        if (this.isValidSymbolForRename(document, position, word)) {
+        // Use symbol validator to check if rename is valid
+        const validationResult = M68kSymbolValidator.isValidSymbolForRename(word);
+        if (validationResult.isValid) {
             return {
                 range: wordRange,
                 placeholder: word
             };
         }
         
-        throw new Error('Cannot rename this element');
-    }
-    
+        throw new Error(`Cannot rename "${word}": ${validationResult.reason}`);
+    }    
     provideRenameEdits(
         document: vscode.TextDocument, 
         position: vscode.Position, 
@@ -40,94 +43,40 @@ export class M68kRenameProvider implements vscode.RenameProvider {
         
         const oldName = document.getText(wordRange);
         
-        // Validate new name
-        if (!this.isValidSymbolName(newName)) {
-            throw new Error('Invalid symbol name');
+        // Validate new name using symbol validator
+        if (!M68kSymbolValidator.isValidSymbolName(newName)) {
+            throw new Error('Invalid symbol name format');
+        }
+        
+        // Use file parser to find all references across files
+        const context = M68kFileParser.createParseContext(document);
+        const references = M68kFileParser.findSymbolReferences(oldName, context, true);
+        
+        if (references.length === 0) {
+            M68kLogger.logFailure(`No references found for symbol: ${oldName}`);
+            return null;
         }
         
         const workspaceEdit = new vscode.WorkspaceEdit();
-        const references = this.findAllOccurrences(document, oldName);
         
-        references.forEach(location => {
-            workspaceEdit.replace(document.uri, location.range, newName);
-        });
+        // Group edits by file
+        const editsByFile = new Map<string, vscode.TextEdit[]>();
         
-        return workspaceEdit;
-    }
-    
-    private isValidSymbolForRename(document: vscode.TextDocument, position: vscode.Position, symbolName: string): boolean {
-        // Check if it's a register (cannot rename)
-        if (symbolName.match(/^[dDaA][0-7]$/) || 
-            symbolName.match(/^(sp|pc|sr|ccr|usp|ssp)$/i)) {
-            return false;
-        }
-        
-        // Check if it's an instruction (cannot rename)
-        const instructions = [
-            'move', 'movea', 'movem', 'movep', 'moveq', 'add', 'adda', 'addi', 'addq', 'addx',
-            'sub', 'suba', 'subi', 'subq', 'subx', 'muls', 'mulu', 'divs', 'divu', 'and', 'andi',
-            'or', 'ori', 'eor', 'eori', 'not', 'cmp', 'cmpa', 'cmpi', 'cmpm', 'tst', 'bra', 'bsr',
-            'bcc', 'bcs', 'beq', 'bne', 'bge', 'bgt', 'ble', 'blt', 'bhi', 'bls', 'bpl', 'bmi',
-            'bvc', 'bvs', 'jmp', 'jsr', 'rts', 'rtr', 'rte', 'lea', 'pea', 'clr', 'neg', 'ext',
-            'swap', 'exg', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror', 'roxl', 'roxr', 'btst', 'bset',
-            'bclr', 'bchg', 'trap', 'trapv', 'chk', 'stop', 'reset', 'nop', 'illegal'
-        ];
-        
-        if (instructions.includes(symbolName.toLowerCase())) {
-            return false;
-        }
-        
-        // Check if it's a user-defined symbol (label or constant)
-        return this.isUserDefinedSymbol(document, symbolName);
-    }
-    
-    private isUserDefinedSymbol(document: vscode.TextDocument, symbolName: string): boolean {
-        const text = document.getText();
-        const lines = text.split('\n');
-        
-        const escapedSymbol = this.escapeRegex(symbolName);
-        
-        // Look for label definition or EQU definition
-        for (const line of lines) {
-            if (line.match(new RegExp(`^\\s*(${escapedSymbol})\\s*:`, 'i')) ||
-                line.match(new RegExp(`^\\s*(${escapedSymbol})\\s+equ\\b`, 'i'))) {
-                return true;
+        for (const location of references) {
+            const filePath = location.uri.fsPath;
+            if (!editsByFile.has(filePath)) {
+                editsByFile.set(filePath, []);
             }
-        }
-        
-        return false;
-    }
-    
-    private isValidSymbolName(name: string): boolean {
-        // M68K symbol names must start with letter or underscore, followed by letters, digits, or underscores
-        return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name);
-    }
-    
-    private findAllOccurrences(document: vscode.TextDocument, symbolName: string): vscode.Location[] {
-        const locations: vscode.Location[] = [];
-        const text = document.getText();
-        const lines = text.split('\n');
-        
-        const escapedSymbol = this.escapeRegex(symbolName);
-        const symbolRegex = new RegExp(`\\b(${escapedSymbol})\\b`, 'gi');
-        
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            let match;
             
-            while ((match = symbolRegex.exec(line)) !== null) {
-                const range = new vscode.Range(
-                    new vscode.Position(i, match.index),
-                    new vscode.Position(i, match.index + match[0].length)
-                );
-                locations.push(new vscode.Location(document.uri, range));
-            }
+            const edit = new vscode.TextEdit(location.range, newName);
+            editsByFile.get(filePath)!.push(edit);
         }
         
-        return locations;
-    }
-    
-    private escapeRegex(str: string): string {
-        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-}
+        // Apply edits to each file
+        for (const [filePath, edits] of editsByFile) {
+            workspaceEdit.set(vscode.Uri.file(filePath), edits);
+        }
+        
+        M68kLogger.logSuccess(`Rename operation will affect ${references.length} references across ${editsByFile.size} files`);
+        return workspaceEdit;
+    }}

@@ -4,10 +4,9 @@ import { M68kReferenceProvider } from './referenceProvider';
 import { M68kRenameProvider } from './renameProvider';
 import { M68kHoverProvider } from './hoverProvider';
 import { M68kDocumentSymbolProvider } from './symbolProvider';
+import { M68kFoldingProvider } from './foldingProvider';
 import { setConfigPath, loadConfig, watchConfig } from './config';
 import { M68kLogger } from './logger';
-import * as path from 'path';
-import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
     M68kLogger.log('Extension activating...');
@@ -80,45 +79,4 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
     M68kLogger.log('Extension deactivating...');
     M68kLogger.dispose();
-}
-
-class M68kFoldingProvider implements vscode.FoldingRangeProvider {
-    provideFoldingRanges(document: vscode.TextDocument): vscode.FoldingRange[] {
-        const ranges: vscode.FoldingRange[] = [];
-        const lines = document.getText().split('\n');
-        let regionStart: number | null = null;
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
-            // Handle region folding
-            if (line.match(/^;\s*#region\b/i)) {
-                regionStart = i;
-            } else if (line.match(/^;\s*#endregion\b/i) && regionStart !== null) {
-                ranges.push(new vscode.FoldingRange(regionStart, i));
-                regionStart = null;
-            }
-            // Handle macro folding
-            if (line.match(/^\s*\w+\s+macro\b/i)) {
-                const macroStart = i;
-                for (let j = i + 1; j < lines.length; j++) {
-                    if (lines[j].trim().match(/^\s*endm\b/i)) {
-                        ranges.push(new vscode.FoldingRange(macroStart, j));
-                        break;
-                    }
-                }
-            }
-            // Handle multi-line comments
-            const blockCommentStart = line.indexOf('/*');
-            if (blockCommentStart !== -1) {
-                for (let j = i; j < lines.length; j++) {
-                    if (lines[j].indexOf('*/') !== -1) {
-                        if (j > i) {
-                            ranges.push(new vscode.FoldingRange(i, j));
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        return ranges;
-    }
 }

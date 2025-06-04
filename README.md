@@ -29,6 +29,7 @@ A comprehensive Visual Studio Code extension that provides full language support
   - Section folding (`SECTION`, `BSS`, `DATA`, `TEXT`)
   - Macro definitions (`MACRO` to `ENDM`)
   - Conditional blocks (`IF` to `ENDIF`)
+  - Conditional assembly directives (`IFND/ENDC`, `IFD/ENDC`, `IFDEF/ENDC`, `IFNDEF/ENDC`)
   - Block comments (`/*` to `*/`)
   - Manual regions (`; #region` and `; #endregion`)
 - **Symbol Search**: Quickly find symbols using Ctrl+Shift+O
@@ -141,12 +142,129 @@ npm run compile
 
 Open the extension in VS Code and press F5 to launch a new Extension Development Host window.
 
+#### Testing Utilities
+
+The extension includes comprehensive testing utilities in `src/testUtils.ts`:
+
+```typescript
+import { TestDataGenerator, PerformanceTester, createTestParseContext } from './testUtils';
+
+// Generate test project structure
+const testProject = TestDataGenerator.generateTestProject('/tmp/test-project');
+
+// Test file parsing
+const symbols = await parseTestFile(testProject.mainFile);
+
+// Performance testing
+const perfTester = new PerformanceTester();
+perfTester.startTiming();
+// ... perform operations ...
+const duration = perfTester.endTiming('parse-operation');
+```
+
+**Available Testing Features:**
+
+- **Project Generation**: Automatically create complete test projects with includes, macros, and labels
+- **File Utilities**: Create test assembly files, include files, and configuration files
+- **Symbol Validation**: Validate symbol properties and assert symbol existence
+- **Performance Testing**: Measure and track operation performance with statistics
+- **Cache Testing**: Utilities to test caching functionality and performance
+
+### Error Handling
+
+The extension uses standardized error handling patterns:
+
+```typescript
+import { M68kErrorHandler, M68kError, ErrorSeverity } from './errorHandler';
+
+// Wrap operations with error handling
+const result = await M68kErrorHandler.withErrorHandling(
+    async () => {
+        // Your operation here
+        return await parseFile(filePath);
+    },
+    {
+        operation: 'file-parsing',
+        file: filePath
+    }
+);
+
+// Create specific error types
+const fileError = M68kErrorHandler.createFileError(
+    'Cannot read file',
+    filePath,
+    { operation: 'file-parsing' }
+);
+```
+
+**Error Handling Features:**
+
+- **Standardized Error Types**: Consistent error classification and handling
+- **Contextual Information**: Rich error context with file, line, and operation details
+- **Automatic Logging**: Errors are automatically logged with appropriate severity
+- **User Notifications**: Critical errors show user-friendly notifications
+- **Performance Monitoring**: Error tracking for performance optimization
+
 ## Configuration
+
+### VS Code Settings
 
 The extension can be configured through VS Code settings:
 
 - `m68kAsm.enableHover`: Enable/disable hover information (default: true)
 - `m68kAsm.enableGoToDefinition`: Enable/disable go to definition (default: true)
+
+### Project Configuration (m68kasmconfig.json)
+
+Create a `m68kasmconfig.json` file in your project root to configure project-specific settings:
+
+```json
+{
+  "includeFallbackPath": "./include",
+  "enableIntelliSense": true,
+  "enableHover": true,
+  "enableGoToDefinition": true,
+  "enableReferences": true,
+  "enableRename": true,
+  "enableFolding": true,
+  "cacheTimeout": 30,
+  "maxCacheSize": 100,
+  "logLevel": "info"
+}
+```
+
+#### Configuration Options
+
+- **`includeFallbackPath`**: Default path to search for include files when not found relative to current file
+- **`enableIntelliSense`**: Master switch for all IntelliSense features
+- **`enableHover`**: Enable hover information for instructions and symbols
+- **`enableGoToDefinition`**: Enable go-to-definition functionality
+- **`enableReferences`**: Enable find-all-references functionality
+- **`enableRename`**: Enable symbol renaming functionality
+- **`enableFolding`**: Enable code folding functionality
+- **`cacheTimeout`**: Cache expiry time in seconds (default: 30)
+- **`maxCacheSize`**: Maximum number of files to cache (default: 100)
+- **`logLevel`**: Logging verbosity: "debug", "info", "warn", "error" (default: "info")
+
+### Performance Features
+
+#### File and Symbol Caching
+
+The extension includes a comprehensive caching system that significantly improves performance:
+
+- **File Content Caching**: Frequently accessed files are cached in memory with automatic expiry
+- **Symbol Caching**: Parsed symbols are cached and automatically invalidated when files change
+- **Smart Cache Management**: Automatic cleanup of expired entries and memory management
+- **Cache Statistics**: Debug information available through logging for performance optimization
+
+#### Configuration Validation
+
+The extension automatically validates your `m68kasmconfig.json` configuration:
+
+- **Structure Validation**: Ensures all properties have correct types
+- **Path Validation**: Warns about non-existent include paths
+- **Value Range Checking**: Validates numeric values are within reasonable ranges
+- **Unknown Property Detection**: Warns about unrecognized configuration options
 
 ## Supported Instructions
 
