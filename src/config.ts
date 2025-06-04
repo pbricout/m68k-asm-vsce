@@ -38,12 +38,13 @@ const DEFAULT_CONFIG: Required<M68kAsmConfig> = {
 
 let cachedConfig: M68kAsmConfig = {};
 let configPath: string | null = null;
+let projectRoot: string | null = null;
 let lastValidationResult: ConfigValidationResult | null = null;
 
 /**
  * Validates the configuration object structure and values
  */
-export function validateConfig(config: any): ConfigValidationResult {
+export function validateConfig(config: any, projectRoot?: string): ConfigValidationResult {
     const result: ConfigValidationResult = {
         isValid: true,
         errors: [],
@@ -61,8 +62,12 @@ export function validateConfig(config: any): ConfigValidationResult {
         if (typeof config.includeFallbackPath !== 'string') {
             result.errors.push('includeFallbackPath must be a string');
             result.isValid = false;
-        } else if (config.includeFallbackPath && !fs.existsSync(config.includeFallbackPath)) {
-            result.warnings.push(`includeFallbackPath directory does not exist: ${config.includeFallbackPath}`);
+        } else if (config.includeFallbackPath && projectRoot) {
+            // Resolve the path relative to the project root
+            const resolvedPath = path.resolve(projectRoot, config.includeFallbackPath);
+            if (!fs.existsSync(resolvedPath)) {
+                result.warnings.push(`includeFallbackPath directory does not exist: ${config.includeFallbackPath} (resolved to: ${resolvedPath})`);
+            }
         }
     }
 
@@ -124,8 +129,9 @@ export function mergeWithDefaults(config: M68kAsmConfig): Required<M68kAsmConfig
     };
 }
 
-export function setConfigPath(projectRoot: string) {
-    configPath = path.join(projectRoot, 'm68kasmconfig.json');
+export function setConfigPath(projectRootPath: string) {
+    projectRoot = projectRootPath;
+    configPath = path.join(projectRootPath, 'm68kasmconfig.json');
 }
 
 export function loadConfig() {
@@ -146,9 +152,8 @@ export function loadConfig() {
     try {
         const configContent = fs.readFileSync(configPath, 'utf8');
         const parsedConfig = JSON.parse(configContent);
-        
-        // Validate the configuration
-        const validationResult = validateConfig(parsedConfig);
+          // Validate the configuration
+        const validationResult = validateConfig(parsedConfig, projectRoot || undefined);
         lastValidationResult = validationResult;
         
         if (validationResult.isValid) {
