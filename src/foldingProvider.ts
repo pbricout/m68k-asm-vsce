@@ -104,7 +104,7 @@ export class M68kFoldingProvider implements vscode.FoldingRangeProvider {
      */
     private isSection(line: string): boolean {
         return M68kRegexPatterns.SECTION_DEFINITION.test(line) ||
-               /^\s*(text|data|bss)\b/i.test(line);
+               /^\s*(section|text|data|bss)\b/i.test(line);
     }
     
     /**

@@ -35,7 +35,8 @@
     },
     {
       "include": "#operators"
-    }  ],
+    }
+  ],
   "repository": {
     "comments": {
       "patterns": [
@@ -119,7 +120,8 @@
           "begin": "\\b(?i)(ifnd)\\b",
           "beginCaptures": {
             "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
-          },          "end": "\\b(?i)(endc)\\b",
+          },
+          "end": "\\b(?i)(endc)\\b",
           "endCaptures": {
             "1": { "name": "keyword.control.conditional.end.m68k-asm" }
           },
