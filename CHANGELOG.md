@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.8](https://github.com/pbricout/m68k-assembly/compare/v1.8.7...v1.8.8) (2025-06-04)
+
+
+### Features
+
+* add incbin directive support for syntax highlighting and navigation ([4e72311](https://github.com/pbricout/m68k-assembly/commit/4e723116ad052036e5797bfeea59f546eac4a4ca))
+
+
+### Bug Fixes
+
+* unify include path syntax highlighting ([e4dc50d](https://github.com/pbricout/m68k-assembly/commit/e4dc50d836c6a115ead644a92a0b2d19b96ff6bf))
+
 ### [1.8.7](https://github.com/pbricout/m68k-assembly/compare/v1.8.6...v1.8.7) (2025-06-04)
 
 
