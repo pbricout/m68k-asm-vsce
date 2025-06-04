@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/pbricout/m68k-assembly/compare/v1.4.1...v1.5.0) (2025-06-04)
+
+
+### Features
+
+* add comprehensive macro and symbol definition support ([d2c7149](https://github.com/pbricout/m68k-assembly/commit/d2c7149de382ab674f40aeb1324d873917a887e5))
+
 ### [1.4.1](https://github.com/pbricout/m68k-assembly/compare/v1.4.0...v1.4.1) (2025-06-04)
 
 
