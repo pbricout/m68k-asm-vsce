@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.1) (2025-06-04)
+
+
+### Features
+
+* Add comprehensive npm test command and reorganize test structure ([5202899](https://github.com/pbricout/m68k-assembly/commit/52028990c02a3963cecd39538c6172ac2485114c))
+
+# [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.0) (2025-06-04)
+
+
+### Features
+
+* Add comprehensive npm test command and reorganize test structure ([5202899](https://github.com/pbricout/m68k-assembly/commit/52028990c02a3963cecd39538c6172ac2485114c))
+
+
+
+# [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.7.0...v1.6.0) (2025-06-04)
+
+
+### Features
+
+* Add comprehensive npm test command and reorganize test structure ([5202899](https://github.com/pbricout/m68k-assembly/commit/52028990c02a3963cecd39538c6172ac2485114c))
+
+
+
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
 ## [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.5.0...v1.6.0) (2025-06-04)
 
 ## [1.5.0](https://github.com/pbricout/m68k-assembly/compare/v1.4.1...v1.5.0) (2025-06-04)
