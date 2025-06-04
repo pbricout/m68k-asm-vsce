@@ -22,6 +22,7 @@ assembly language programming.
   - Cycle timing information for each instruction
   - Register descriptions
   - Symbol definitions
+  - Include/incbin path resolution and file status
 
 ### 📁 Code Navigation
 
@@ -107,6 +108,13 @@ Hover over any instruction to see:
   - Additional cycles for different addressing modes
   - Timing variations for special cases
 - Example usage
+
+**Include Path Resolution**: Hover over file paths in `include` and `incbin` directives to see:
+
+- Resolved workspace-relative path
+- Full absolute path
+- File existence status and size
+- Search paths used for resolution
 
 ### Go to Definition
 

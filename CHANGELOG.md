@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [1.8.3](https://github.com/pbricout/m68k-assembly/compare/v1.8.2...v1.8.3) (2025-06-04)
 
+### Features
+
+* **hover**: Add include/incbin path resolution in hover information
+  * Hover over file paths in `include` and `incbin` directives now shows:
+    * Resolved workspace-relative path
+    * Full absolute path  
+    * File existence status and size
+    * Search paths used for resolution
+
 ### [1.8.2](https://github.com/pbricout/m68k-assembly/compare/v1.8.1...v1.8.2) (2025-06-04)
 
 ### [1.8.1](https://github.com/pbricout/m68k-assembly/compare/v1.8.0...v1.8.1) (2025-06-04)

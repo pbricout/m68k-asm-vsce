@@ -42,6 +42,10 @@ export class M68kRegexPatterns {
         return new RegExp(`^\\s*(${this.escapeSymbol(symbolName)})\\s*=`, 'i');
     }    // Include patterns
     static readonly INCLUDE_STATEMENT = /^\s*include\s+(?:["']([^"']+)["']|(\S+))/i;
+    static readonly INCBIN_STATEMENT = /^\s*incbin\s+(?:["']([^"']+)["']|(\S+))/i;
+    
+    // General include/incbin pattern for path extraction
+    static readonly INCLUDE_PATH_PATTERN = /^\s*(include|incbin)\s+(?:["']([^"']+)["']|(\S+))/i;
     
     // Section patterns
     static readonly SECTION_DEFINITION = /^\s*section\s+["']?([^"',\s]+)["']?/i;

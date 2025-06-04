@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { M68kRegexPatterns } from './regexPatterns';
 import { M68kFileParser } from './fileParser';
+import { resolveIncludePath, getProjectRoot, getIncludeFallbackPath } from './includeUtils';
 
 // Local label rules: A local label (starting with a dot) is only visible between two global labels. Only one instance of a local label can exist in a global label section. All language features (hover, go to definition, rename, etc.) must respect this scoping.
 
@@ -313,9 +314,7 @@ export class M68kHoverProvider implements vscode.HoverProvider {
         const [minCycles, maxCycles] = matchingEntry.cycles.split('-').map(Number);
         const cycles = maxCycles ? 
             `${minCycles + additionalCycles}-${maxCycles + additionalCycles}` :
-            (minCycles + additionalCycles).toString();
-
-        return {
+            (minCycles + additionalCycles).toString();        return {
             cycles,
             readWrite: matchingEntry.readWrite
         };
@@ -326,6 +325,10 @@ export class M68kHoverProvider implements vscode.HoverProvider {
         position: vscode.Position,
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
+        // First check if we're hovering over an include/incbin path
+        const includeHover = this.getIncludePathHover(document, position);
+        if (includeHover) return includeHover;
+        
         const wordRange = document.getWordRangeAtPosition(position);
         if (!wordRange) return null;
         
@@ -366,8 +369,7 @@ export class M68kHoverProvider implements vscode.HoverProvider {
                 wordRange
             );
         }
-        
-        // Check for user-defined symbols
+          // Check for user-defined symbols
         const symbolInfo = this.getSymbolInfo(document, word);
         if (symbolInfo) {
             return new vscode.Hover(
@@ -377,7 +379,9 @@ export class M68kHoverProvider implements vscode.HoverProvider {
         }
         
         return null;
-    }    private getSymbolInfo(document: vscode.TextDocument, symbolName: string): string | null {
+    }
+
+    private getSymbolInfo(document: vscode.TextDocument, symbolName: string): string | null {
         try {
             const context = M68kFileParser.createParseContext(document);
             const definition = M68kFileParser.findSymbolDefinition(context.filePath, symbolName, context);
@@ -429,5 +433,88 @@ export class M68kHoverProvider implements vscode.HoverProvider {
             operands,
             line
         };
+    }
+
+    private getIncludePathHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | null {
+        const line = document.lineAt(position.line).text;
+        const linePosition = position.character;
+        
+        // Check if this line contains an include or incbin directive
+        const includeMatch = line.match(M68kRegexPatterns.INCLUDE_PATH_PATTERN);
+        if (!includeMatch) return null;
+        
+        const directive = includeMatch[1].toLowerCase(); // 'include' or 'incbin'
+        const quotedPath = includeMatch[2]; // Path with quotes
+        const unquotedPath = includeMatch[3]; // Path without quotes
+        const includePath = quotedPath || unquotedPath;
+        
+        if (!includePath) return null;
+        
+        // Find the position of the path in the line
+        const pathStart = line.indexOf(includePath);
+        const pathEnd = pathStart + includePath.length;
+        
+        // Check if the cursor is over the path
+        if (linePosition < pathStart || linePosition > pathEnd) return null;
+        
+        // Resolve the include path
+        const projectRoot = getProjectRoot(document);
+        const baseDir = path.dirname(document.uri.fsPath);
+        const fallbackPath = getIncludeFallbackPath(projectRoot);
+        
+        const resolvedPath = resolveIncludePath(includePath, baseDir, projectRoot, fallbackPath);
+        
+        if (resolvedPath) {
+            // Calculate relative path from workspace root for display
+            const relativePath = path.relative(projectRoot, resolvedPath);
+            const displayPath = relativePath.length < resolvedPath.length ? relativePath : resolvedPath;
+            
+            const markdownContent = new vscode.MarkdownString();
+            markdownContent.appendMarkdown(`**${directive.toUpperCase()}** - File path resolved\n\n`);
+            markdownContent.appendMarkdown(`**Workspace relative path:** \`${displayPath.replace(/\\/g, '/')}\`\n\n`);
+            markdownContent.appendMarkdown(`**Full path:** \`${resolvedPath}\`\n\n`);
+            
+            // Check if file exists and add status
+            try {
+                const fs = require('fs');
+                if (fs.existsSync(resolvedPath)) {
+                    const stats = fs.statSync(resolvedPath);
+                    markdownContent.appendMarkdown(`✅ **File exists** (${(stats.size / 1024).toFixed(1)} KB)`);
+                } else {
+                    markdownContent.appendMarkdown(`❌ **File not found**`);
+                }
+            } catch (error) {
+                markdownContent.appendMarkdown(`⚠️ **Cannot access file**`);
+            }
+            
+            // Create range for the path portion
+            const pathRange = new vscode.Range(
+                position.line, pathStart,
+                position.line, pathEnd
+            );
+            
+            return new vscode.Hover(markdownContent, pathRange);
+        } else {
+            // Path could not be resolved
+            const markdownContent = new vscode.MarkdownString();
+            markdownContent.appendMarkdown(`**${directive.toUpperCase()}** - File path\n\n`);
+            markdownContent.appendMarkdown(`❌ **File not found:** \`${includePath}\`\n\n`);
+            markdownContent.appendMarkdown(`**Search paths:**\n`);
+            markdownContent.appendMarkdown(`- Current directory: \`${path.relative(projectRoot, baseDir)}\`\n`);
+            markdownContent.appendMarkdown(`- Project root: \`${path.relative(projectRoot, projectRoot)}\`\n`);
+            if (fallbackPath !== projectRoot) {
+                markdownContent.appendMarkdown(`- Fallback path: \`${path.relative(projectRoot, fallbackPath)}\`\n`);
+            }
+            
+            // Create range for the path portion
+            const pathStart = line.indexOf(includePath);
+            const pathEnd = pathStart + includePath.length;
+            const pathRange = new vscode.Range(
+                position.line, pathStart,
+                position.line, pathEnd
+            );
+            
+            return new vscode.Hover(markdownContent, pathRange);
+        }
     }
 }
