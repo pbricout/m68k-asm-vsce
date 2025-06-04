@@ -2,7 +2,7 @@
  * Quick integration test to verify the fixes work
  */
 import * as path from 'path';
-import { TestDataGenerator, createTempDir, cleanupTempDir, parseTestFile, getCacheStats } from '../src/testUtils';
+import { TestDataGenerator, createTempDir, cleanupTempDir, parseTestFile, getCacheStats } from '../testUtils';
 
 async function runIntegrationTest() {
     const tempDir = createTempDir('integration-test-');

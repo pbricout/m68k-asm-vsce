@@ -280,6 +280,72 @@ The extension provides hover documentation for all standard M68K instructions in
 - **Bit Manipulation**: BTST, BSET, BCLR, BCHG
 - **System**: TRAP, TRAPV, CHK, STOP, RESET, NOP, ILLEGAL
 
+## Testing
+
+The extension includes a comprehensive test suite located in the `test/` directory:
+
+```
+test/
+├── run-all-tests.js          # Main test runner script
+├── demos/                    # Demo assembly files and examples
+├── fixtures/                 # Test data and fixture files
+├── include-fix/              # Tests for include statement resolution
+├── integration/              # Integration tests
+├── unit/                     # Unit tests for individual components
+└── verification/             # Verification and demo scripts
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+cd test
+node run-all-tests.js
+
+# Run verification scripts
+cd test/verification
+node verify-include-fix.js
+```
+
+### Recent Fixes
+
+- ✅ **Include Statement Resolution**: Fixed path resolution bug for include statements with Windows-style backslashes
+- ✅ **Cross-Platform Support**: Enhanced path handling for better Windows/Unix compatibility
+- ✅ **Project Organization**: All test files properly organized into structured directories
+
+## Testing & Development
+
+The extension includes a comprehensive test suite located in the `test/` directory:
+
+```text
+test/
+├── run-all-tests.js          # Main test runner script
+├── demos/                    # Demo assembly files and examples
+├── fixtures/                 # Test data and fixture files
+├── include-fix/              # Tests for include statement resolution
+├── integration/              # Integration tests
+├── unit/                     # Unit tests for individual components
+└── verification/             # Verification and demo scripts
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+cd test
+node run-all-tests.js
+
+# Run verification scripts
+cd test/verification
+node verify-include-fix.js
+```
+
+### Recent Improvements
+
+- ✅ **Include Statement Resolution**: Fixed path resolution bug for include statements with Windows-style backslashes
+- ✅ **Cross-Platform Support**: Enhanced path handling for better Windows/Unix compatibility
+- ✅ **Project Organization**: All test files properly organized into structured directories
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit issues and pull requests.
