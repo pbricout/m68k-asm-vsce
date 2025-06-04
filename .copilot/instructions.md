@@ -2,6 +2,11 @@
 
 This document provides guidance for GitHub Copilot when working with this VS Code extension for M68K assembly language support.
 
+## Working guidelines
+
+- the source code is in the src folder do not look at the out folder
+- look at broader picture when investigating consider the project as a whole
+
 ## Project Overview
 
 This is a Visual Studio Code extension that provides comprehensive language support for Motorola 68000 (M68K) assembly language. The extension includes features like syntax highlighting, IntelliSense, code navigation, and folding capabilities.
