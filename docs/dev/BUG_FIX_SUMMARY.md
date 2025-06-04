@@ -49,6 +49,30 @@ This document summarizes the comprehensive review and fixes applied to the M68K 
 
 **Solution**: Corrected array destructuring logic in `hoverProvider.ts` line 307 with proper safe array access for cycle range parsing.
 
+### 5. Comment Highlighting Bug
+
+**Issue**: Comments starting with `*` were not being highlighted correctly, causing them to appear as regular code.
+
+**Solution**: Updated the TextMate grammar in `syntaxes/m68k-asm.tmLanguage.json`:
+- Added new rule for line comments starting with `*` to be recognized as comments
+- Ensured these comments are styled with the correct comment color
+
+### 6. Bracket Highlighting in Comments
+
+**Issue**: Brackets and parentheses within comments were highlighted in yellow instead of being entirely green like the rest of the comment text, creating inconsistent and distracting syntax highlighting.
+
+**Root Cause**: The TextMate grammar pattern for block comments didn't use `contentName` to explicitly mark all content within comments as comment text, allowing other patterns to match brackets inside comments.
+
+**Fix**: 
+- Modified block comment patterns to use `contentName: "comment.block.content.m68k-asm"` to ensure all content within comments is treated consistently
+- Updated comment delimiters to use proper `beginCaptures` and `endCaptures` instead of nested patterns
+- Applied similar improvements to line comments for consistency
+
+**Benefits**:
+- Consistent highlighting of all text within comments, including brackets and parentheses
+- Improved readability of commented code that includes brackets
+- Better adherence to standard syntax highlighting conventions
+
 ## Enhanced Features
 
 ### 1. Improved Folding Provider
