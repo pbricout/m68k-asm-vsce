@@ -1,6 +1,7 @@
 # M68K Assembly Language Support for VS Code
 
-A comprehensive Visual Studio Code extension that provides full language support for Motorola 68000 (M68K) assembly language programming.
+A comprehensive Visual Studio Code extension that provides full language support for Motorola 68000 (M68K)
+assembly language programming.
 
 ## Features
 
@@ -88,7 +89,8 @@ buffer: ds.b    BUFFER_SIZE
 ### INCLUDE Directives and Cross-File Navigation
 
 - Use `INCLUDE "filename.inc"` to include symbols, macros, and definitions from other files.
-- The extension recursively parses all included files, so you can Go to Definition, Find References, and Hover across your entire project—even through chains of includes.
+- The extension recursively parses all included files, so you can Go to Definition, Find References, and Hover
+  across your entire project—even through chains of includes.
 - Include paths are resolved in this order:
   1. Relative to the current file
   2. Relative to the project root
@@ -138,37 +140,9 @@ npm install
 npm run compile
 ```
 
-### Testing
+### Development Testing
 
 Open the extension in VS Code and press F5 to launch a new Extension Development Host window.
-
-#### Testing Utilities
-
-The extension includes comprehensive testing utilities in `src/testUtils.ts`:
-
-```typescript
-import { TestDataGenerator, PerformanceTester, createTestParseContext } from './testUtils';
-
-// Generate test project structure
-const testProject = TestDataGenerator.generateTestProject('/tmp/test-project');
-
-// Test file parsing
-const symbols = await parseTestFile(testProject.mainFile);
-
-// Performance testing
-const perfTester = new PerformanceTester();
-perfTester.startTiming();
-// ... perform operations ...
-const duration = perfTester.endTiming('parse-operation');
-```
-
-**Available Testing Features:**
-
-- **Project Generation**: Automatically create complete test projects with includes, macros, and labels
-- **File Utilities**: Create test assembly files, include files, and configuration files
-- **Symbol Validation**: Validate symbol properties and assert symbol existence
-- **Performance Testing**: Measure and track operation performance with statistics
-- **Cache Testing**: Utilities to test caching functionality and performance
 
 ### Error Handling
 
@@ -284,7 +258,7 @@ The extension provides hover documentation for all standard M68K instructions in
 
 The extension includes a comprehensive test suite located in the `test/` directory:
 
-```
+```text
 test/
 ├── run-all-tests.js          # Main test runner script
 ├── demos/                    # Demo assembly files and examples
@@ -313,42 +287,9 @@ node verify-include-fix.js
 - ✅ **Cross-Platform Support**: Enhanced path handling for better Windows/Unix compatibility
 - ✅ **Project Organization**: All test files properly organized into structured directories
 
-## Testing & Development
-
-The extension includes a comprehensive test suite located in the `test/` directory:
-
-```text
-test/
-├── run-all-tests.js          # Main test runner script
-├── demos/                    # Demo assembly files and examples
-├── fixtures/                 # Test data and fixture files
-├── include-fix/              # Tests for include statement resolution
-├── integration/              # Integration tests
-├── unit/                     # Unit tests for individual components
-└── verification/             # Verification and demo scripts
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-cd test
-node run-all-tests.js
-
-# Run verification scripts
-cd test/verification
-node verify-include-fix.js
-```
-
-### Recent Improvements
-
-- ✅ **Include Statement Resolution**: Fixed path resolution bug for include statements with Windows-style backslashes
-- ✅ **Cross-Platform Support**: Enhanced path handling for better Windows/Unix compatibility
-- ✅ **Project Organization**: All test files properly organized into structured directories
-
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues and pull requests.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed information on how to contribute to this project.
 
 ## License
 
