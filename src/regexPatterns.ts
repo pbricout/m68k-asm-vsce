@@ -79,8 +79,7 @@ export class M68kRegexPatterns {
     static readonly MACRO_END = /^\s*endm\b/i;
     static readonly CONDITIONAL_START = /^\s*(ifnd|ifd|ifdef|ifndef)\b/i;
     static readonly CONDITIONAL_END = /^\s*endc\b/i;
-    
-    // M68K instruction set validation
+      // M68K instruction set validation
     static readonly M68K_INSTRUCTIONS = new Set([
         'move', 'movea', 'movem', 'movep', 'moveq', 'lea', 'pea', 'swap', 'exg',
         'add', 'adda', 'addi', 'addq', 'addx', 'sub', 'suba', 'subi', 'subq', 'subx',
@@ -89,10 +88,27 @@ export class M68kRegexPatterns {
         'bge', 'bgt', 'ble', 'blt', 'bhi', 'bls', 'bpl', 'bmi', 'bvc', 'bvs',
         'jmp', 'jsr', 'rts', 'rtr', 'rte', 'clr', 'neg', 'ext', 'asl', 'asr', 'lsl', 'lsr',
         'rol', 'ror', 'roxl', 'roxr', 'btst', 'bset', 'bclr', 'bchg', 'trap', 'trapv',
-        'chk', 'stop', 'reset', 'nop', 'illegal'
+        'chk', 'stop', 'reset', 'nop', 'illegal', 'negx', 'link', 'unlk', 'abcd', 'sbcd',
+        'nbcd', 'tas'
+    ]);
+    
+    // M68K registers that should not be treated as user symbols
+    static readonly M68K_REGISTERS = new Set([
+        'd0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7',
+        'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7',
+        'sp', 'pc', 'sr', 'ccr', 'usp', 'ssp'
     ]);
     
     static isValidInstruction(instruction: string): boolean {
         return this.M68K_INSTRUCTIONS.has(instruction.toLowerCase());
+    }
+    
+    static isValidRegister(register: string): boolean {
+        return this.M68K_REGISTERS.has(register.toLowerCase());
+    }
+    
+    static isReservedWord(word: string): boolean {
+        const lowerWord = word.toLowerCase();
+        return this.M68K_INSTRUCTIONS.has(lowerWord) || this.M68K_REGISTERS.has(lowerWord);
     }
 }
