@@ -84,6 +84,16 @@ clear_buffer:
 buffer: ds.b    BUFFER_SIZE
 ```
 
+### INCLUDE Directives and Cross-File Navigation
+
+- Use `INCLUDE "filename.inc"` to include symbols, macros, and definitions from other files.
+- The extension recursively parses all included files, so you can Go to Definition, Find References, and Hover across your entire project—even through chains of includes.
+- Include paths are resolved in this order:
+  1. Relative to the current file
+  2. Relative to the project root
+  3. Using a fallback path specified in `m68kasmconfig.json`
+- Both `/` and `\\` are supported in include paths for cross-platform compatibility.
+
 ### Hover Information
 
 Hover over any instruction to see:
@@ -98,7 +108,7 @@ Hover over any instruction to see:
 ### Go to Definition
 
 - Click on any label or constant while holding Ctrl to jump to its definition
-- Works across the entire file
+- Works across the entire file and all included files
 
 ### Find References
 

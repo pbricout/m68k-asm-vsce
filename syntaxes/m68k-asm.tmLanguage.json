@@ -115,98 +115,35 @@
       "patterns": [
         {
           "name": "entity.name.function.m68k-asm",
-          "match": "^(?i)\\s*([a-z_][a-z0-9_]*)\\s*:"
+          "match": "^\\s*([A-Za-z_][A-Za-z0-9_]*)\\s*:"
         },
         {
           "name": "entity.name.function.m68k-asm",
-          "match": "^(?i)\\s*([a-z_][a-z0-9_]*)(?=\\s|$)",
-          "captures": {
-            "1": { "name": "entity.name.function.m68k-asm" }
-          }
-        }
-      ]
-    },
-    "directives": {
-      "name": "keyword.control.directive.m68k-asm",
-      "match": "\\b(?i)(org|equ|dc|ds|dcb|even|align|include|incbin|macro|endm|if|else|endif|section|text|data|bss)\\b"
-    },
-    "instructions": {
-      "patterns": [
-        {
-          "name": "keyword.mnemonic.data-movement.m68k-asm",
-          "match": "\\b(?i)(move|movea|movem|movep|moveq|exg|lea|pea|swap)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.arithmetic.m68k-asm",
-          "match": "\\b(?i)(add|adda|addi|addq|addx|sub|suba|subi|subq|subx|muls|mulu|divs|divu|neg|negx|clr|ext|abcd|sbcd|nbcd)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.logical.m68k-asm",
-          "match": "\\b(?i)(and|andi|or|ori|eor|eori|not|asl|asr|lsl|lsr|rol|ror|roxl|roxr)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.compare.m68k-asm",
-          "match": "\\b(?i)(cmp|cmpa|cmpi|cmpm|tst)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.branch.m68k-asm",
-          "match": "\\b(?i)(bra|bsr|bcc|bcs|beq|bne|bge|bgt|ble|blt|bhi|bls|bpl|bmi|bvc|bvs)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.jump.m68k-asm",
-          "match": "\\b(?i)(jmp|jsr|rts|rtr|rte)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.condition.m68k-asm",
-          "match": "\\b(?i)(scc|scs|seq|sne|sge|sgt|sle|slt|shi|sls|spl|smi|svc|svs|st|sf)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.system.m68k-asm",
-          "match": "\\b(?i)(trap|trapv|chk|stop|reset|nop|illegal)\\b"
-        },
-        {
-          "name": "keyword.mnemonic.bit.m68k-asm",
-          "match": "\\b(?i)(btst|bset|bclr|bchg)\\b"
+          "match": "^\\s*([A-Za-z_][A-Za-z0-9_]*)\\b(?!\\s*(:|equ|dc|ds|dcb|even|align|include|incbin|macro|endm|if|else|endif|section|text|data|bss|move|movea|movem|movep|moveq|exg|lea|pea|swap|add|adda|addi|addq|addx|sub|suba|subi|subq|subx|muls|mulu|divs|divu|neg|negx|clr|ext|abcd|sbcd|nbcd|and|andi|or|ori|eor|eori|not|asl|asr|lsl|lsr|rol|ror|roxl|roxr|cmp|cmpa|cmpi|cmpm|tst|bra|bsr|bcc|bcs|beq|bne|bge|bgt|ble|blt|bhi|bls|bpl|bmi|bvc|bvs|jmp|jsr|rts|rtr|rte|scc|scs|seq|sne|sge|sgt|sle|slt|shi|sls|spl|smi|svc|svs|st|sf|trap|trapv|chk|stop|reset|nop|illegal)\\b)"
         }
       ]
     },
     "registers": {
       "patterns": [
         {
-          "name": "variable.language.register.data.m68k-asm",
-          "match": "\\b(?i)[dD][0-7]\\b"
-        },
-        {
-          "name": "variable.language.register.address.m68k-asm",
-          "match": "\\b(?i)[aA][0-7]\\b"
-        },
-        {
-          "name": "variable.language.register.special.m68k-asm",
-          "match": "\\b(?i)(sp|pc|sr|ccr|usp|ssp)\\b"
+          "name": "variable.other.register.m68k-asm",
+          "match": "\\b[A-Za-z][A-Za-z0-9]*\\b"
         }
       ]
     },
     "numbers": {
       "patterns": [
         {
-          "name": "constant.numeric.hex.m68k-asm",
-          "match": "\\$[0-9a-fA-F]+"
-        },
+          "name": "constant.numeric.m68k-asm",
+          "match": "\\b(0x[0-9A-Fa-f]+|[0-9]+)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
         {
-          "name": "constant.numeric.hex.m68k-asm",
-          "match": "0[xX][0-9a-fA-F]+"
-        },
-        {
-          "name": "constant.numeric.binary.m68k-asm",
-          "match": "%[01]+"
-        },
-        {
-          "name": "constant.numeric.octal.m68k-asm",
-          "match": "@[0-7]+"
-        },
-        {
-          "name": "constant.numeric.decimal.m68k-asm",
-          "match": "\\b\\d+"
+          "name": "keyword.operator.m68k-asm",
+          "match": "[+\\-*/&|^%=<>!~]"
         }
       ]
     },
@@ -236,9 +173,28 @@
         }
       ]
     },
-    "operators": {
-      "name": "keyword.operator.m68k-asm",
-      "match": "[+\\-*/()\\[\\]<>=!&|^~]"
+    "directives": {
+      "patterns": [
+        {
+          "name": "meta.directive.m68k-asm",
+          "begin": "\\b(?i)(include|macro|endm|if|else|endif|section|text|data|bss)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.directive.begin.m68k-asm" }
+          },
+          "end": "(?=\\b(?i)(include|macro|endm|if|else|endif|section|text|data|bss)\\b)",
+          "endCaptures": {
+            "1": { "name": "keyword.control.directive.end.m68k-asm" }
+          }
+        }
+      ]
+    },
+    "instructions": {
+      "patterns": [
+        {
+          "name": "support.function.m68k-asm",
+          "match": "\\b(?i)(move|movea|movem|movep|moveq|exg|lea|pea|swap|add|adda|addi|addq|addx|sub|suba|subi|subq|subx|muls|mulu|divs|divu|neg|negx|clr|ext|abcd|sbcd|nbcd|and|andi|or|ori|eor|eori|not|asl|asr|lsl|lsr|rol|ror|roxl|roxr|cmp|cmpa|cmpi|cmpm|tst|bra|bsr|bcc|bcs|beq|bne|bge|bgt|ble|blt|bhi|bls|bpl|bmi|bvc|bvs|jmp|jsr|rts|rtr|rte|scc|scs|seq|sne|sge|sgt|sle|slt|shi|sls|spl|smi|svc|svs|st|sf|trap|trapv|chk|stop|reset|nop|illegal)\\b"
+        }
+      ]
     }
   }
 }

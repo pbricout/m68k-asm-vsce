@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
+import { resolveIncludePath, getProjectRoot, getIncludeFallbackPath } from './includeUtils';
 
 // Local label rules: A local label (starting with a dot) is only visible between two global labels. Only one instance of a local label can exist in a global label section. All language features (hover, go to definition, rename, etc.) must respect this scoping.
 
@@ -128,7 +131,7 @@ export class M68kHoverProvider implements vscode.HoverProvider {
     };
 
     private instructionDocs: { [key: string]: string } = {
-        // Data Movement Instructions with timing info
+        // Data Movement Instructions with timing
         'move': 'MOVE - Copy data from source to destination\nSyntax: MOVE.size source,destination\n\nTiming:\n- Byte/Word:\n  • Register to Register: 4(1/0) cycles\n  • Memory to Register: 8-12(2/0) cycles\n  • Register to Memory: 8-12(1/1) cycles\n  • Memory to Memory: 12-20(2/1) cycles\n- Long:\n  • Register to Register: 4(1/0) cycles\n  • Memory to Register: 12-16(3/0) cycles\n  • Register to Memory: 12-20(1/2) cycles\n  • Memory to Memory: 20-28(3/2) cycles',
         'movea': 'MOVEA - Move address to address register\nSyntax: MOVEA.size source,An\n\nTiming:\n- Word: 4-12(1-3/0) cycles\n- Long: 4-16(1-4/0) cycles\nAdd 4 cycles for memory indirect modes',
         'movem': 'MOVEM - Move multiple registers\nSyntax: MOVEM.size register_list,destination\n\nTiming:\n- Memory to Registers: 12+4n(3+n/0) cycles\n- Registers to Memory: 8+4n(2/n) cycles\nWhere n is the number of registers moved',
@@ -377,69 +380,52 @@ export class M68kHoverProvider implements vscode.HoverProvider {
     }
     
     private getSymbolInfo(document: vscode.TextDocument, symbolName: string): string | null {
-        const text = document.getText();
-        const lines = text.split('\n');
-        const escapedSymbol = this.escapeRegex(symbolName);
-
-        // Section boundary regex (matches SECTION, .text, .data, .bss, etc.)
-        const sectionRegex = /^\s*(section\b|\.text\b|\.data\b|\.bss\b|text\b|data\b|bss\b)/i;
-        // Global label regex
-        const globalLabelRegex = /^\s*([a-zA-Z_][\w]*)\s*:/;
-
-        // If local label, only search in current section/global label region
-        const isLocal = symbolName.startsWith('.');
-        if (isLocal) {
-            // Find the line number of the reference (simulate as first occurrence for hover)
-            let refLine = -1;
+        const mainFilePath = document.uri.fsPath;
+        const baseDir = path.dirname(mainFilePath);
+        const projectRoot = getProjectRoot(document);
+        const fallbackPath = getIncludeFallbackPath(projectRoot);
+        // Recursively search for symbol info in main and included files
+        const findSymbolRecursive = (filePath: string, baseDir: string, symbolName: string, visited = new Set<string>()): string | null => {
+            if (visited.has(filePath)) return null;
+            visited.add(filePath);
+            let text: string;
+            try {
+                text = fs.readFileSync(filePath, 'utf8');
+            } catch {
+                return null;
+            }
+            const lines = text.split('\n');
+            const escapedSymbol = this.escapeRegex(symbolName);
+            // Local/global label and EQU
             for (let i = 0; i < lines.length; i++) {
-                if (lines[i].match(new RegExp(`^\s*${this.escapeRegex(symbolName)}\b`, 'i'))) {
-                    refLine = i;
-                    break;
-                }
-            }
-            if (refLine === -1) return null;
-            // Find the nearest section or global label above
-            let sectionStart = 0;
-            for (let i = refLine - 1; i >= 0; i--) {
-                if (lines[i].match(sectionRegex) || lines[i].match(globalLabelRegex)) {
-                    sectionStart = i;
-                    break;
-                }
-            }
-            // Find the next section or global label below
-            let sectionEnd = lines.length;
-            for (let i = refLine + 1; i < lines.length; i++) {
-                if (lines[i].match(sectionRegex) || lines[i].match(globalLabelRegex)) {
-                    sectionEnd = i;
-                    break;
-                }
-            }
-            // Now search for the local label only in this region
-            for (let i = sectionStart; i < sectionEnd; i++) {
                 const line = lines[i];
-                const localLabelMatch = line.match(new RegExp(`^\s*(${this.escapeRegex(symbolName)})\s*:`, 'i'));
-                if (localLabelMatch) {
-                    return `**${symbolName}** (Local Label)\n\nDefined at line ${i + 1}`;
+                const labelMatch = line.match(new RegExp(`^\s*(${escapedSymbol})\s*:`, 'i'));
+                if (labelMatch) {
+                    return `**${symbolName}** (Label)\n\nDefined at line ${i + 1} in ${path.basename(filePath)}`;
+                }
+                const equMatch = line.match(new RegExp(`^\s*(${escapedSymbol})\s+equ\s+(.+)`, 'i'));
+                if (equMatch) {
+                    const value = equMatch[2].split(';')[0].trim();
+                    return `**${symbolName}** (Constant)\n\nValue: \`${value}\`\nDefined at line ${i + 1} in ${path.basename(filePath)}`;
+                }
+            }
+            // Scan for includes
+            for (let i = 0; i < lines.length; i++) {
+                const includeMatch = lines[i].match(/^\s*include\s+["']?([^"'\s]+)["']?/i);
+                if (includeMatch) {
+                    const includePath = includeMatch[1];
+                    const resolved = resolveIncludePath(includePath, baseDir, projectRoot, fallbackPath);
+                    if (resolved) {
+                        const found = findSymbolRecursive(resolved, path.dirname(resolved), symbolName, visited);
+                        if (found) return found;
+                    }
                 }
             }
             return null;
-        }
-        // Global label: mylabel:
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const labelMatch = line.match(new RegExp(`^\s*(${escapedSymbol})\s*:`, 'i'));
-            if (labelMatch) {
-                return `**${symbolName}** (Label)\n\nDefined at line ${i + 1}`;
-            }
-            // Look for EQU definition
-            const equMatch = line.match(new RegExp(`^\s*(${escapedSymbol})\s+equ\s+(.+)`, 'i'));
-            if (equMatch) {
-                const value = equMatch[2].split(';')[0].trim(); // Remove comment
-                return `**${symbolName}** (Constant)\n\nValue: \`${value}\`\nDefined at line ${i + 1}`;
-            }
-        }
-        return null;
-    }    private escapeRegex(str: string): string {
+        };
+        return findSymbolRecursive(mainFilePath, baseDir, symbolName);
+    }
+    private escapeRegex(str: string): string {
         return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 

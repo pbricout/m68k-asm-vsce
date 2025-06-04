@@ -1,77 +1,100 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
+import { resolveIncludePath } from './includeUtils';
+
+function getProjectRoot(document: vscode.TextDocument): string {
+    const wsFolders = vscode.workspace.workspaceFolders;
+    if (!wsFolders) return path.dirname(document.uri.fsPath);
+    const containing = wsFolders.find(f => document.uri.fsPath.startsWith(f.uri.fsPath));
+    return containing ? containing.uri.fsPath : wsFolders[0].uri.fsPath;
+}
+
+function getIncludeFallbackPath(projectRoot: string): string {
+    const configPath = path.join(projectRoot, 'm68kasmconfig.json');
+    if (fs.existsSync(configPath)) {
+        try {
+            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            if (config.includeFallbackPath) {
+                // If absolute, use as-is; if relative, resolve from project root
+                return path.isAbsolute(config.includeFallbackPath)
+                    ? config.includeFallbackPath
+                    : path.resolve(projectRoot, config.includeFallbackPath);
+            }
+        } catch {}
+    }
+    return projectRoot;
+}
 
 export class M68kReferenceProvider implements vscode.ReferenceProvider {
-    
     provideReferences(
-        document: vscode.TextDocument, 
-        position: vscode.Position, 
-        context: vscode.ReferenceContext, 
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        context: vscode.ReferenceContext,
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Location[]> {
-        
         const wordRange = document.getWordRangeAtPosition(position);
         if (!wordRange) {
             return [];
         }
-        
         const word = document.getText(wordRange);
-        const references = this.findAllReferences(document, word, context.includeDeclaration);
-        
-        return references;
-    }
-    
-    private findAllReferences(document: vscode.TextDocument, symbolName: string, includeDeclaration: boolean): vscode.Location[] {
-        const locations: vscode.Location[] = [];
-        const text = document.getText();
-        const lines = text.split('\n');
-        
-        const escapedSymbol = this.escapeRegex(symbolName);
-        
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            
-            // Check for label definition
-            const labelDefMatch = line.match(new RegExp(`^\\s*(${escapedSymbol})\\s*:`, 'i'));
-            if (labelDefMatch && includeDeclaration) {
-                const character = line.indexOf(labelDefMatch[1]);
-                locations.push(new vscode.Location(document.uri, new vscode.Position(i, character)));
+        const mainFilePath = document.uri.fsPath;
+        const baseDir = path.dirname(mainFilePath);
+        const projectRoot = getProjectRoot(document);
+        const fallbackPath = getIncludeFallbackPath(projectRoot);
+        // Recursively search for references and definitions in main and included files
+        const findAllReferencesRecursive = (filePath: string, baseDir: string, symbolName: string, includeDeclaration: boolean, visited = new Set<string>()): vscode.Location[] => {
+            if (visited.has(filePath)) return [];
+            visited.add(filePath);
+            let text: string;
+            try {
+                text = fs.readFileSync(filePath, 'utf8');
+            } catch {
+                return [];
             }
-            
-            // Check for EQU definition
-            const equDefMatch = line.match(new RegExp(`^\\s*(${escapedSymbol})\\s+equ\\b`, 'i'));
-            if (equDefMatch && includeDeclaration) {
-                const character = line.indexOf(equDefMatch[1]);
-                locations.push(new vscode.Location(document.uri, new vscode.Position(i, character)));
-            }
-            
-            // Find all references (not definitions)
-            const referenceRegex = new RegExp(`\\b(${escapedSymbol})\\b`, 'gi');
-            let match;
-            
-            while ((match = referenceRegex.exec(line)) !== null) {
-                // Skip if this is a label definition
-                const beforeMatch = line.substring(0, match.index).trim();
-                const afterMatch = line.substring(match.index + match[0].length).trim();
-                
-                // Skip label definitions and EQU definitions
-                if (beforeMatch === '' && afterMatch.startsWith(':')) {
-                    continue;
+            const lines = text.split('\n');
+            const locations: vscode.Location[] = [];
+            const escapedSymbol = symbolName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                // Label definition
+                const labelDefMatch = line.match(new RegExp(`^\\s*(${escapedSymbol})\\s*:`, 'i'));
+                if (labelDefMatch && includeDeclaration) {
+                    const character = line.indexOf(labelDefMatch[1]);
+                    locations.push(new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character)));
                 }
-                if (beforeMatch === '' && afterMatch.toLowerCase().startsWith('equ')) {
-                    continue;
+                // EQU definition
+                const equDefMatch = line.match(new RegExp(`^\\s*(${escapedSymbol})\\s+equ\\b`, 'i'));
+                if (equDefMatch && includeDeclaration) {
+                    const character = line.indexOf(equDefMatch[1]);
+                    locations.push(new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character)));
                 }
-                
-                locations.push(new vscode.Location(
-                    document.uri, 
-                    new vscode.Position(i, match.index)
-                ));
+                // References
+                const referenceRegex = new RegExp(`\\b(${escapedSymbol})\\b`, 'gi');
+                let match;
+                while ((match = referenceRegex.exec(line)) !== null) {
+                    const beforeMatch = line.substring(0, match.index).trim();
+                    const afterMatch = line.substring(match.index + match[0].length).trim();
+                    if (beforeMatch === '' && afterMatch.startsWith(':')) continue;
+                    if (beforeMatch === '' && afterMatch.toLowerCase().startsWith('equ')) continue;
+                    const range = new vscode.Range(
+                        new vscode.Position(i, match.index),
+                        new vscode.Position(i, match.index + match[0].length)
+                    );
+                    locations.push(new vscode.Location(vscode.Uri.file(filePath), range));
+                }
+                // INCLUDE
+                const includeMatch = line.match(/^\s*include\s+["']?([^"'\s]+)["']?/i);
+                if (includeMatch) {
+                    const includePath = includeMatch[1];
+                    const resolved = resolveIncludePath(includePath, baseDir, projectRoot, fallbackPath);
+                    if (resolved) {
+                        locations.push(...findAllReferencesRecursive(resolved, path.dirname(resolved), symbolName, includeDeclaration, visited));
+                    }
+                }
             }
-        }
-        
-        return locations;
-    }
-    
-    private escapeRegex(str: string): string {
-        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return locations;
+        };
+        return findAllReferencesRecursive(mainFilePath, baseDir, word, context.includeDeclaration);
     }
 }
