@@ -21,11 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
     
     setConfigPath(projectRoot);
     loadConfig();
-    
-    // Watch for config file changes and reload
+      // Watch for config file changes and reload
     watchConfig(() => {
         M68kLogger.log('Config file changed - reloading extension configuration');
-        vscode.window.showInformationMessage('M68K Assembly config reloaded from m68kasmconfig.json');
     });
 
     M68kLogger.log('Registering language providers...');
