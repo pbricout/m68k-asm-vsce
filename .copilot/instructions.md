@@ -120,6 +120,8 @@ This is a Visual Studio Code extension that provides comprehensive language supp
 - Cover edge cases in assembly syntax
 - Validate symbol resolution
 - Check performance with large files
+- Test files should be kept for regression purposes
+- Test files should be written in the appropriate test folder
 
 ### Stable Changes
 
