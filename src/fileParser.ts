@@ -139,9 +139,8 @@ export class M68kFileParser {
         const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
         const projectRoot = workspaceFolder ? workspaceFolder.uri.fsPath : baseDir;
         
-        // Get fallback path from config
-        const config = getConfig();
-        const fallbackPath = config.includeFallbackPath || './includes';
+        // Get fallback path from config using the proper utility function
+        const fallbackPath = getIncludeFallbackPath(projectRoot);
 
         return {
             document,
@@ -151,7 +150,7 @@ export class M68kFileParser {
             projectRoot,
             fallbackPath
         };
-    }    /**
+    }/**
      * Parse symbols from lines with caching and local label scoping
      */
     private static parseSymbolsFromLines(filePath: string, lines: string[]): SymbolInfo[] {
