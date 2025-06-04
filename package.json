@@ -2,7 +2,7 @@
   "name": "m68k-assembly",
   "displayName": "M68K Assembly Language Support",
   "description": "Complete M68K assembly language support with syntax highlighting, IntelliSense, and navigation features",
-  "version": "1.7.0",
+  "version": "1.6.0",
   "license": "MIT",
   "engines": {
     "vscode": "^1.74.0"
@@ -74,12 +74,12 @@
         }
       }
     }
-  },
-  "scripts": {
+  },  "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc",
     "watch": "tsc --watch",
-    "test": "npm run compile && node out/test/test-integration.js",
+    "test": "tsc -p tsconfig.test.json && node out/test/standalone-test.js",
+    "test:quick": "echo '🚀 Quick Test: Compiling...' && npm run compile && echo '✅ Compilation successful!'",
     "package": "vsce package",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules",
     "lint": "npm run lint:md",

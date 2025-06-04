@@ -53,7 +53,7 @@ export class M68kFileParser {
         const now = Date.now();
         const expiredFiles: string[] = [];
         
-        for (const [filePath, entry] of this.fileCache.entries()) {
+        for (const [filePath, entry] of Array.from(this.fileCache.entries())) {
             if (now - entry.timestamp > this.CACHE_EXPIRY_MS) {
                 expiredFiles.push(filePath);
             }

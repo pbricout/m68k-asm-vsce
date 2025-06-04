@@ -2,18 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.7.0](https://github.com/pbricout/m68k-assembly/compare/v1.6.0...v1.7.0) (2025-06-04)
-
-
-### Features
-
-* Complete M68K Assembly extension refactoring with performance optimizations ([b350276](https://github.com/pbricout/m68k-assembly/commit/b3502768f9c82d7778a236f70e372f2e6b1f762c))
-
-
-### Bug Fixes
-
-* exclude test folder from TypeScript compilation ([3fb9eff](https://github.com/pbricout/m68k-assembly/commit/3fb9effeb5bf544b6133a576f64d81212e1e3cf1))
-
 ## [1.6.0](https://github.com/pbricout/m68k-assembly/compare/v1.5.0...v1.6.0) (2025-06-04)
 
 ## [1.5.0](https://github.com/pbricout/m68k-assembly/compare/v1.4.1...v1.5.0) (2025-06-04)

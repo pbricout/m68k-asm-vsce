@@ -1,0 +1,13 @@
+
+- bug: include 
+- support folding of blocks of comments
+- support comments starting with a *
+- support folding of a code block
+  - starts at a global label and finishes at global label or section
+- support output directive
+- bug F12 on a mnemonic or register (in addressing modes) tries to go a definition this is not valid and should be ignored
+- bug: syntax highlight is broken
+- bug: better support for local label
+- improve cycle count support
+- label ending with \@ : is there something special to do
+-

@@ -73,7 +73,7 @@ export class M68kRenameProvider implements vscode.RenameProvider {
         }
         
         // Apply edits to each file
-        for (const [filePath, edits] of editsByFile) {
+        for (const [filePath, edits] of Array.from(editsByFile)) {
             workspaceEdit.set(vscode.Uri.file(filePath), edits);
         }
         
