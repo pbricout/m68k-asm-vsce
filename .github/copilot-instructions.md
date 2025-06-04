@@ -6,6 +6,8 @@ This document provides guidance for GitHub Copilot when working with this VS Cod
 
 - the source code is in the src folder do not look at the out folder
 - look at broader picture when investigating consider the project as a whole
+- do not use temporary test files, always include tests as part of test suite
+- do not write tests for code which depends on vscode API
 
 ## Project Overview
 

@@ -17,6 +17,10 @@ const testCategories = {
         directory: 'include-fix',
         files: ['test-include-debug.ts', 'test-include-functionality.ts'],
         description: 'Tests for the include statement resolution fix'
+    },    'Incbin Directive Tests': {
+        directory: 'incbin-directive',
+        files: ['verify-incbin.ts', 'test-regex-patterns.js'],
+        description: 'Tests for incbin directive support'
     },
     'Hover Include Tests': {
         directory: 'hover-include',
@@ -41,6 +45,11 @@ const testCategories = {
         directory: 'demos',
         files: ['comprehensive-folding-test.s', 'test-folding.s'],
         description: 'Demonstration and test assembly files'
+    },
+    'Test Files': {
+        directory: 'test-files',
+        files: ['local-label-scoping-test.s', 'incbin-syntax-test.s'],
+        description: 'Assembly test files for various features'
     }
 };
 

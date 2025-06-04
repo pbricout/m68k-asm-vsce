@@ -420,18 +420,25 @@ export class M68kFileParser {
                 }
             }
         }
-    }
-
-    /**
+    }    /**
      * Find include files referenced in the document
      */
     public static findIncludeFiles(lines: string[], currentFilePath: string): string[] {
         const includeFiles: string[] = [];
-        const currentDir = path.dirname(currentFilePath);        for (const line of lines) {
+        const currentDir = path.dirname(currentFilePath);
+        
+        for (const line of lines) {
+            // Check for both include and incbin statements
             const includeMatch = line.match(M68kRegexPatterns.INCLUDE_STATEMENT);
-            if (includeMatch) {
+            const incbinMatch = line.match(M68kRegexPatterns.INCBIN_STATEMENT);
+            
+            // Process either include or incbin match
+            const match = includeMatch || incbinMatch;
+            if (match) {
                 // Extract the path - could be in group 1 (quoted) or group 2 (unquoted)
-                const includePath = includeMatch[1] || includeMatch[2];                try {
+                const includePath = match[1] || match[2];
+                
+                try {
                     // Get project root from workspace
                     const workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(currentFilePath));
                     const projectRoot = workspaceFolder ? workspaceFolder.uri.fsPath : currentDir;
@@ -439,15 +446,17 @@ export class M68kFileParser {
                     // Use the dedicated function to get fallback path
                     const fallbackPath = getIncludeFallbackPath(projectRoot);
                     
-                    M68kLogger.log(`Resolving include: "${includePath}" from base: "${currentDir}", project: "${projectRoot}", fallback: "${fallbackPath}"`);
+                    const directiveType = includeMatch ? "include" : "incbin";
+                    M68kLogger.log(`Resolving ${directiveType}: "${includePath}" from base: "${currentDir}", project: "${projectRoot}", fallback: "${fallbackPath}"`);
                     
                     const resolvedPath = resolveIncludePath(includePath, currentDir, projectRoot, fallbackPath);
                     if (resolvedPath && fs.existsSync(resolvedPath)) {
                         includeFiles.push(resolvedPath);
-                        M68kLogger.logSuccess(`Added include file: "${resolvedPath}"`);
+                        M68kLogger.logSuccess(`Added ${directiveType} file: "${resolvedPath}"`);
                     }
                 } catch (error) {
-                    M68kLogger.warn(`Could not resolve include path: ${includePath}`, error);
+                    const directiveType = includeMatch ? "include" : "incbin";
+                    M68kLogger.warn(`Could not resolve ${directiveType} path: ${includePath}`, error);
                 }
             }
         }
