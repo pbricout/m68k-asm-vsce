@@ -10,14 +10,32 @@ export class M68kRegexPatterns {
     static escapeSymbol(symbolName: string): string {
         return symbolName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-      // Label patterns
+    
+    // Label patterns
     static readonly LABEL_DEFINITION = /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/;
+    
+    // Global label pattern (doesn't start with .)
+    static readonly GLOBAL_LABEL_DEFINITION = /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/;
+    
+    // Local label pattern (starts with .)
+    static readonly LOCAL_LABEL_DEFINITION = /^\s*(\.([a-zA-Z_][a-zA-Z0-9_]*))\s*:/;
+    
     static labelDefinition(symbolName: string): RegExp {
         return new RegExp(`^\\s*(${this.escapeSymbol(symbolName)})\\s*:`, 'i');
     }
     
     static labelReference(symbolName: string): RegExp {
         return new RegExp(`\\b(${this.escapeSymbol(symbolName)})\\b`, 'gi');
+    }
+    
+    // Check if a symbol name is a local label
+    static isLocalLabel(symbolName: string): boolean {
+        return symbolName.startsWith('.');
+    }
+    
+    // Check if a symbol name is a global label
+    static isGlobalLabel(symbolName: string): boolean {
+        return !symbolName.startsWith('.') && this.SYMBOL_NAME.test(symbolName);
     }
     
     // EQU patterns

@@ -47,10 +47,9 @@ export class M68kRenameProvider implements vscode.RenameProvider {
         if (!M68kSymbolValidator.isValidSymbolName(newName)) {
             throw new Error('Invalid symbol name format');
         }
-        
-        // Use file parser to find all references across files
+          // Use file parser to find all references across files with proper scoping
         const context = M68kFileParser.createParseContext(document);
-        const references = M68kFileParser.findSymbolReferences(oldName, context, true);
+        const references = M68kFileParser.findSymbolReferencesWithScoping(oldName, context, position, true);
         
         if (references.length === 0) {
             M68kLogger.logFailure(`No references found for symbol: ${oldName}`);

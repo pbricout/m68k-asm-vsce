@@ -308,13 +308,14 @@ export class M68kHoverProvider implements vscode.HoverProvider {
         }
         if (context.operands[1]) {
             additionalCycles += this.addressingModeCycles[this.parseAddressingMode(context.operands[1])] || 0;
-        }
-
-        // Parse base cycles range
-        const [minCycles, maxCycles] = matchingEntry.cycles.split('-').map(Number);
+        }        // Parse base cycles range
+        const cycleParts = matchingEntry.cycles.split('-').map(Number);
+        const minCycles = cycleParts[0];
+        const maxCycles = cycleParts.length > 1 ? cycleParts[1] : undefined;
+        
         const cycles = maxCycles ? 
             `${minCycles + additionalCycles}-${maxCycles + additionalCycles}` :
-            (minCycles + additionalCycles).toString();        return {
+            (minCycles + additionalCycles).toString();return {
             cycles,
             readWrite: matchingEntry.readWrite
         };
@@ -368,9 +369,8 @@ export class M68kHoverProvider implements vscode.HoverProvider {
                 new vscode.MarkdownString(`**${word.toUpperCase()}**\n\n${this.directiveDocs[word]}`),
                 wordRange
             );
-        }
-          // Check for user-defined symbols
-        const symbolInfo = this.getSymbolInfo(document, word);
+        }          // Check for user-defined symbols
+        const symbolInfo = this.getSymbolInfo(document, word, position);
         if (symbolInfo) {
             return new vscode.Hover(
                 new vscode.MarkdownString(symbolInfo),
@@ -379,12 +379,11 @@ export class M68kHoverProvider implements vscode.HoverProvider {
         }
         
         return null;
-    }
-
-    private getSymbolInfo(document: vscode.TextDocument, symbolName: string): string | null {
+    }    private getSymbolInfo(document: vscode.TextDocument, symbolName: string, position?: vscode.Position): string | null {
         try {
             const context = M68kFileParser.createParseContext(document);
-            const definition = M68kFileParser.findSymbolDefinition(context.filePath, symbolName, context);
+            // Use scoping-aware method for symbol definition lookup
+            const definition = M68kFileParser.findSymbolDefinitionWithScoping(symbolName, context, position);
             if (!definition) {
                 return null;
             }
@@ -397,8 +396,16 @@ export class M68kHoverProvider implements vscode.HoverProvider {
                 // EQU definition
                 return `**${symbolName}** (Constant)\n\nValue: \`${definition.value}\`\nDefined at line ${lineNumber} in ${fileName}`;
             } else {
-                // Label definition
-                return `**${symbolName}** (Label)\n\nDefined at line ${lineNumber} in ${fileName}`;
+                // Label definition - distinguish between global and local labels
+                const labelType = definition.isLocal ? 'Local Label' : 'Global Label';
+                let displayText = `**${symbolName}** (${labelType})\n\nDefined at line ${lineNumber} in ${fileName}`;
+                
+                // Add scope information for local labels
+                if (definition.isLocal && definition.globalScope) {
+                    displayText += `\nScope: ${definition.globalScope}`;
+                }
+                
+                return displayText;
             }
         } catch (error) {
             // Log error but don't break hover functionality for other symbols

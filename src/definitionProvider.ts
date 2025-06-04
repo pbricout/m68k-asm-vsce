@@ -6,7 +6,43 @@ import { M68kLogger } from './logger';
 import { M68kRegexPatterns } from './regexPatterns';
 import { M68kFileParser } from './fileParser';
 
-export class M68kDefinitionProvider implements vscode.DefinitionProvider {    provideDefinition(
+export class M68kDefinitionProvider implements vscode.DefinitionProvider {
+    // M68K instruction mnemonics that should not be treated as user symbols
+    private static readonly M68K_INSTRUCTIONS = [
+        'MOVE', 'MOVEA', 'MOVEM', 'MOVEP', 'MOVEQ',
+        'ADD', 'ADDA', 'ADDI', 'ADDQ', 'ADDX',
+        'SUB', 'SUBA', 'SUBI', 'SUBQ', 'SUBX',
+        'MULS', 'MULU', 'DIVS', 'DIVU',
+        'ASL', 'ASR', 'LSL', 'LSR', 'ROL', 'ROR', 'ROXL', 'ROXR',
+        'CMP', 'CMPA', 'CMPI', 'CMPM', 'TST',
+        'BRA', 'BSR', 'BCC', 'BCS', 'BEQ', 'BNE', 'BGE', 'BGT', 'BLE', 'BLT',
+        'BHI', 'BLS', 'BPL', 'BMI', 'BVC', 'BVS',
+        'JMP', 'JSR', 'RTS', 'RTR', 'RTE',
+        'BTST', 'BSET', 'BCLR', 'BCHG',
+        'TRAP', 'TRAPV', 'CHK', 'STOP', 'RESET', 'NOP', 'ILLEGAL',
+        'AND', 'ANDI', 'OR', 'ORI', 'EOR', 'EORI', 'NOT',
+        'NEG', 'NEGX', 'CLR', 'EXT', 'SWAP',
+        'PEA', 'LEA', 'LINK', 'UNLK',
+        'ABCD', 'SBCD', 'NBCD', 'TAS'
+    ];
+
+    // M68K registers that should not be treated as user symbols
+    private static readonly M68K_REGISTERS = [
+        'D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7',
+        'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7',
+        'SP', 'PC', 'SR', 'CCR', 'USP', 'SSP'
+    ];
+
+    /**
+     * Check if a word is a reserved M68K instruction or register
+     */
+    private isReservedWord(word: string): boolean {
+        const upperWord = word.toUpperCase();
+        return M68kDefinitionProvider.M68K_INSTRUCTIONS.includes(upperWord) ||
+               M68kDefinitionProvider.M68K_REGISTERS.includes(upperWord);
+    }
+
+    provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
@@ -16,6 +52,13 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {    pr
             return null;
         }
         const word = document.getText(wordRange);
+        
+        // Don't provide definitions for M68K instructions and registers
+        if (this.isReservedWord(word)) {
+            M68kLogger.log(`Skipping definition for reserved word: ${word.toUpperCase()}`);
+            return null;
+        }
+        
         const line = document.lineAt(position.line).text;
           // Check if the cursor is on an include statement
         const includeMatch = line.match(M68kRegexPatterns.INCLUDE_STATEMENT);
@@ -51,10 +94,9 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {    pr
                 }
             }
         }
-        
-        // If not on an include path, proceed with symbol search
+          // If not on an include path, proceed with symbol search
         const context = M68kFileParser.createParseContext(document);
-        const symbolInfo = M68kFileParser.findSymbolDefinition(context.filePath, word, context);
+        const symbolInfo = M68kFileParser.findSymbolDefinitionWithScoping(word, context, position);
         
         if (symbolInfo) {
             M68kLogger.logSuccess(`Found ${symbolInfo.type} definition: ${symbolInfo.name} at line ${symbolInfo.line + 1}`);

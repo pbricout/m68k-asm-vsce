@@ -79,7 +79,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc",
     "watch": "tsc --watch",
-    "test": "tsc -p tsconfig.test.json && node out/test/standalone-test.js",
+    "test": "tsc -p tsconfig.test.json && node out/test/integration/standalone-test.js",
     "test:quick": "echo '🚀 Quick Test: Compiling...' && npm run compile && echo '✅ Compilation successful!'",
     "package": "vsce package",
     "lint:md": "markdownlint **/*.md -i node_modules -i out",

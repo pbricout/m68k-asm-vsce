@@ -12,9 +12,8 @@ console.log('\n📦 Testing Compiled Modules...');
 const modules = ['config', 'errorHandler', 'fileParser', 'testUtils', 'regexPatterns', 'symbolValidator'];
 let compiledModules = 0;
 
-for (const module of modules) {
-    // __dirname points to out/test/, so we adjust the path to compiled modules
-    const jsPath = path.join(__dirname, `../src/${module}.js`);
+for (const module of modules) {    // __dirname points to out/test/integration/, so we adjust the path to compiled modules
+    const jsPath = path.join(__dirname, `../../${module}.js`);
     if (fs.existsSync(jsPath)) {
         console.log(`✓ ${module}.js compiled`);
         compiledModules++;
@@ -67,9 +66,8 @@ console.log('\n🔬 Testing Assembly Test Files...');
 const testFiles = ['comprehensive-folding-test.s', 'test-folding.s'];
 let validTestFiles = 0;
 
-for (const file of testFiles) {
-    // __dirname points to out/test/, so we need to go back to project root then to test/
-    const filePath = path.join(__dirname, '../../test', file);
+for (const file of testFiles) {    // __dirname points to out/test/integration/, so we need to go back to project root then to test/demos/
+    const filePath = path.join(__dirname, '../../../test/demos', file);
     if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, 'utf8');
         const lines = content.split('\n').length;
@@ -93,8 +91,8 @@ const configFiles = [
 
 let validConfigs = 0;
 for (const config of configFiles) {
-    // __dirname points to out/test/, so we need to go back to project root
-    const configPath = path.join(__dirname, '../..', config.name);
+    // __dirname points to out/test/integration/, so we need to go back to project root
+    const configPath = path.join(__dirname, '../../..', config.name);
     if (fs.existsSync(configPath)) {
         console.log(`✓ ${config.name} exists`);
         validConfigs++;

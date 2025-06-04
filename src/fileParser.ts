@@ -23,6 +23,9 @@ export interface SymbolInfo {
     value?: string;
     uri: vscode.Uri;
     filePath: string;
+    // Local label scoping information
+    isLocal?: boolean;
+    globalScope?: string; // Name of the global label this local belongs to
 }
 
 // Cache interface for performance optimization
@@ -148,10 +151,8 @@ export class M68kFileParser {
             projectRoot,
             fallbackPath
         };
-    }
-
-    /**
-     * Parse symbols from lines with caching
+    }    /**
+     * Parse symbols from lines with caching and local label scoping
      */
     private static parseSymbolsFromLines(filePath: string, lines: string[]): SymbolInfo[] {
         const cached = this.symbolCache.get(filePath);
@@ -163,60 +164,90 @@ export class M68kFileParser {
 
         const symbols: SymbolInfo[] = [];
         const uri = vscode.Uri.file(filePath);
+        let currentGlobalLabel: string | undefined = undefined;
 
         for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
             const line = lines[lineIndex].trim();
-            if (!line || line.startsWith(';')) continue;
+            if (!line || line.startsWith(';') || line.startsWith('*')) continue;
 
-            // Label detection
-            const labelMatch = line.match(M68kRegexPatterns.LABEL_DEFINITION);
-            if (labelMatch) {                symbols.push({
-                    name: labelMatch[1],
+            // Check for global label definition first
+            const globalLabelMatch = line.match(M68kRegexPatterns.GLOBAL_LABEL_DEFINITION);
+            if (globalLabelMatch) {
+                const labelName = globalLabelMatch[1];
+                if (!labelName.startsWith('.')) { // Ensure it's truly global
+                    currentGlobalLabel = labelName;
+                    symbols.push({
+                        name: labelName,
+                        line: lineIndex,
+                        character: line.indexOf(labelName),
+                        type: 'label',
+                        uri,
+                        filePath,
+                        isLocal: false
+                    });
+                    continue;
+                }
+            }
+
+            // Check for local label definition
+            const localLabelMatch = line.match(M68kRegexPatterns.LOCAL_LABEL_DEFINITION);
+            if (localLabelMatch) {
+                const fullLabelName = localLabelMatch[1]; // Includes the dot
+                symbols.push({
+                    name: fullLabelName,
                     line: lineIndex,
-                    character: line.indexOf(labelMatch[1]),
+                    character: line.indexOf(fullLabelName),
                     type: 'label',
                     uri,
-                    filePath
+                    filePath,
+                    isLocal: true,
+                    globalScope: currentGlobalLabel
                 });
                 continue;
             }
 
             // Constant detection (EQU, =)
             const equMatch = line.match(M68kRegexPatterns.EQU_DEFINITION);
-            if (equMatch) {                symbols.push({
+            if (equMatch) {
+                symbols.push({
                     name: equMatch[1],
                     line: lineIndex,
                     character: line.indexOf(equMatch[1]),
                     type: 'constant',
                     value: equMatch[2],
                     uri,
-                    filePath
+                    filePath,
+                    isLocal: false // Constants are always global
                 });
                 continue;
             }
 
             // Macro definition
             const macroMatch = line.match(M68kRegexPatterns.MACRO_DEFINITION);
-            if (macroMatch) {                symbols.push({
+            if (macroMatch) {
+                symbols.push({
                     name: macroMatch[1],
                     line: lineIndex,
                     character: line.indexOf(macroMatch[1]),
                     type: 'macro',
                     uri,
-                    filePath
+                    filePath,
+                    isLocal: false // Macros are always global
                 });
                 continue;
             }
 
             // Variable/storage definition (DS, DC, DCB)
             const varMatch = line.match(/^(\w+)\s+(ds|dc|dcb)\b/i);
-            if (varMatch) {                symbols.push({
+            if (varMatch) {
+                symbols.push({
                     name: varMatch[1],
                     line: lineIndex,
                     character: line.indexOf(varMatch[1]),
                     type: 'variable',
                     uri,
-                    filePath
+                    filePath,
+                    isLocal: false // Variables are always global
                 });
             }
         }
@@ -230,7 +261,7 @@ export class M68kFileParser {
         }
 
         return symbols;
-    }    /**
+    }/**
      * Find symbol definition in context or included files
      */
     public static findSymbolDefinition(filePath: string, symbolName: string, context: ParseContext): SymbolInfo | undefined {
@@ -282,6 +313,55 @@ export class M68kFileParser {
     }
 
     /**
+     * Find all references to a symbol with proper local label scoping
+     */
+    public static findSymbolReferencesWithScoping(
+        symbolName: string, 
+        context: ParseContext, 
+        searchPosition?: vscode.Position,
+        includeDeclaration?: boolean
+    ): vscode.Location[] {
+        const references: vscode.Location[] = [];
+        const searchLine = searchPosition ? searchPosition.line : 0;
+        
+        // If searching for a local label, only search within the same global scope
+        if (M68kRegexPatterns.isLocalLabel(symbolName)) {
+            // Find the current global scope at the search position
+            const currentScope = this.getCurrentGlobalScope(context.lines, searchLine);
+            if (!currentScope) {
+                // No global scope found, local label isn't visible
+                return references;
+            }
+            
+            // Search only in current document within the same global scope
+            this.findLocalLabelReferencesInLines(
+                symbolName, 
+                currentScope,
+                context.lines, 
+                context.document.uri, 
+                references
+            );
+        } else {
+            // For global symbols, search everywhere
+            this.findReferencesInLines(symbolName, context.lines, context.document.uri, references);
+
+            // Search in included files for global symbols
+            const includeFiles = this.findIncludeFiles(context.lines, context.filePath);
+            for (const includeFile of includeFiles) {
+                try {
+                    const includeLines = this.readFileLines(includeFile);
+                    const includeUri = vscode.Uri.file(includeFile);
+                    this.findReferencesInLines(symbolName, includeLines, includeUri, references);
+                } catch (error) {
+                    M68kLogger.warn(`Error searching references in include file: ${includeFile}`, error);
+                }
+            }
+        }
+
+        return references;
+    }
+
+    /**
      * Find references in specific lines
      */
     private static findReferencesInLines(
@@ -300,6 +380,45 @@ export class M68kFileParser {
                 const position = new vscode.Position(lineIndex, match.index);
                 const range = new vscode.Range(position, position.translate(0, symbolName.length));
                 references.push(new vscode.Location(uri, range));
+            }
+        }
+    }
+
+    /**
+     * Find local label references within a specific global scope
+     */
+    private static findLocalLabelReferencesInLines(
+        localLabelName: string,
+        globalScopeName: string,
+        lines: string[],
+        uri: vscode.Uri,
+        references: vscode.Location[]
+    ): void {
+        const symbolRegex = new RegExp(`\\b${M68kRegexPatterns.escapeSymbol(localLabelName)}\\b`, 'gi');
+        let currentScope: string | undefined = undefined;
+        let inTargetScope = false;
+
+        for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+            const line = lines[lineIndex];
+            
+            // Check for global label to update current scope
+            const globalLabelMatch = line.match(M68kRegexPatterns.GLOBAL_LABEL_DEFINITION);
+            if (globalLabelMatch) {
+                const labelName = globalLabelMatch[1];
+                if (!labelName.startsWith('.')) { // Ensure it's truly global
+                    currentScope = labelName;
+                    inTargetScope = (currentScope === globalScopeName);
+                }
+            }
+            
+            // Only search for references if we're in the target scope
+            if (inTargetScope) {
+                let match;
+                while ((match = symbolRegex.exec(line)) !== null) {
+                    const position = new vscode.Position(lineIndex, match.index);
+                    const range = new vscode.Range(position, position.translate(0, localLabelName.length));
+                    references.push(new vscode.Location(uri, range));
+                }
             }
         }
     }
@@ -370,5 +489,99 @@ export class M68kFileParser {
             fileCache: this.fileCache.size,
             symbolCache: this.symbolCache.size
         };
+    }
+
+    /**
+     * Determine the current global label scope at a given line in the document
+     */
+    private static getCurrentGlobalScope(lines: string[], position: number): string | undefined {
+        // Search backwards from the current position to find the most recent global label
+        for (let i = position; i >= 0; i--) {
+            const line = lines[i].trim();
+            if (!line || line.startsWith(';') || line.startsWith('*')) continue;
+            
+            const globalLabelMatch = line.match(M68kRegexPatterns.GLOBAL_LABEL_DEFINITION);
+            if (globalLabelMatch) {
+                const labelName = globalLabelMatch[1];
+                if (!labelName.startsWith('.')) { // Ensure it's truly global
+                    return labelName;
+                }
+            }
+        }
+        return undefined;
+    }
+
+    /**
+     * Check if a local label is visible from a given position (respects scoping rules)
+     */
+    private static isLocalLabelVisible(
+        localSymbol: SymbolInfo, 
+        searchLines: string[], 
+        searchPosition: number
+    ): boolean {
+        if (!localSymbol.isLocal || !localSymbol.globalScope) {
+            return false;
+        }
+        
+        // Get the current global scope at the search position
+        const currentScope = this.getCurrentGlobalScope(searchLines, searchPosition);
+        
+        // Local label is only visible if we're in the same global scope
+        return currentScope === localSymbol.globalScope;
+    }
+
+    /**
+     * Find symbol definition with proper local label scoping
+     */
+    public static findSymbolDefinitionWithScoping(
+        symbolName: string, 
+        context: ParseContext, 
+        searchPosition?: vscode.Position
+    ): SymbolInfo | undefined {
+        const searchLine = searchPosition ? searchPosition.line : 0;
+        
+        // First search in current document
+        const localSymbols = this.parseSymbolsFromLines(context.filePath, context.lines);
+        
+        // If searching for a local label, respect scoping rules
+        if (M68kRegexPatterns.isLocalLabel(symbolName)) {
+            const localMatch = localSymbols.find(symbol => 
+                symbol.name === symbolName && 
+                symbol.isLocal &&
+                this.isLocalLabelVisible(symbol, context.lines, searchLine)
+            );
+            if (localMatch) {
+                return localMatch;
+            }
+        } else {
+            // For global symbols, find any match (global labels, constants, macros, variables)
+            const globalMatch = localSymbols.find(symbol => 
+                symbol.name === symbolName && !symbol.isLocal
+            );
+            if (globalMatch) {
+                return globalMatch;
+            }
+        }
+
+        // For global symbols, also search in included files
+        if (!M68kRegexPatterns.isLocalLabel(symbolName)) {
+            const includeFiles = this.findIncludeFiles(context.lines, context.filePath);
+            for (const includeFile of includeFiles) {
+                try {
+                    const includeLines = this.readFileLines(includeFile);
+                    const includeSymbols = this.parseSymbolsFromLines(includeFile, includeLines);
+                    const includeMatch = includeSymbols.find(symbol => 
+                        symbol.name === symbolName && !symbol.isLocal
+                    );
+                    if (includeMatch) {
+                        return includeMatch;
+                    }
+                } catch (error) {
+                    M68kLogger.warn(`Error processing include file: ${includeFile}`, error);
+                }
+            }
+        }
+
+        return undefined;
     }
 }

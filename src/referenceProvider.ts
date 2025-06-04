@@ -17,6 +17,6 @@ export class M68kReferenceProvider implements vscode.ReferenceProvider {    prov
         const word = document.getText(wordRange);
         const parseContext = M68kFileParser.createParseContext(document);
         
-        return M68kFileParser.findSymbolReferences(word, parseContext, context.includeDeclaration);
+        return M68kFileParser.findSymbolReferencesWithScoping(word, parseContext, position, context.includeDeclaration);
     }
 }

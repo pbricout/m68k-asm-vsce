@@ -1,7 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "M68K Assembly",
-  "scopeName": "source.m68k-asm",  "patterns": [
+  "scopeName": "source.m68k-asm",
+  "patterns": [
     {
       "include": "#comments"
     },
@@ -34,14 +35,18 @@
     },
     {
       "include": "#operators"
-    }
-  ],
+    }  ],
   "repository": {
     "comments": {
       "patterns": [
         {
           "name": "comment.line.semicolon.m68k-asm",
           "begin": ";",
+          "end": "$"
+        },
+        {
+          "name": "comment.line.asterisk.m68k-asm",
+          "begin": "^\\s*\\*",
           "end": "$"
         },
         {
@@ -90,7 +95,8 @@
           }
         }
       ]
-    },    "conditionals": {
+    },
+    "conditionals": {
       "patterns": [
         {
           "name": "meta.if.block.m68k-asm",
@@ -113,8 +119,7 @@
           "begin": "\\b(?i)(ifnd)\\b",
           "beginCaptures": {
             "1": { "name": "keyword.control.conditional.begin.m68k-asm" }
-          },
-          "end": "\\b(?i)(endc)\\b",
+          },          "end": "\\b(?i)(endc)\\b",
           "endCaptures": {
             "1": { "name": "keyword.control.conditional.end.m68k-asm" }
           },
@@ -122,7 +127,8 @@
             {
               "include": "$self"
             }
-          ]        },
+          ]
+        },
         {
           "name": "meta.ifd.block.m68k-asm",
           "begin": "\\b(?i)(ifd)\\b",
