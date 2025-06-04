@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { resolveIncludePath, getProjectRoot, getIncludeFallbackPath } from './includeUtils';
+import { M68kLogger } from './logger';
 
 export class M68kDefinitionProvider implements vscode.DefinitionProvider {
     provideDefinition(
@@ -18,16 +19,21 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {
         const baseDir = path.dirname(mainFilePath);
         const projectRoot = getProjectRoot(document);
         const fallbackPath = getIncludeFallbackPath(projectRoot);
-        // Recursively search for label/constant definition in main and included files
+          // Recursively search for label/constant definition in main and included files
         const findLabelDefinitionRecursive = (filePath: string, baseDir: string, labelName: string, visited = new Set<string>()): vscode.Location | null => {
             if (visited.has(filePath)) return null;
             visited.add(filePath);
+            
+            M68kLogger.log(`Searching for label "${labelName}" in: ${filePath}`);
+            
             let text: string;
             try {
                 text = fs.readFileSync(filePath, 'utf8');
-            } catch {
+            } catch (error) {
+                M68kLogger.warn(`Could not read file: ${filePath}`, error);
                 return null;
             }
+            
             const lines = text.split('\n');
             const labelRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s*:`, 'i');
             for (let i = 0; i < lines.length; i++) {
@@ -37,6 +43,7 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {
                     return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
                 }
             }
+            
             const equRegex = new RegExp(`^\\s*(${labelName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})\\s+equ\\b`, 'i');
             for (let i = 0; i < lines.length; i++) {
                 const match = lines[i].match(equRegex);
@@ -45,6 +52,7 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {
                     return new vscode.Location(vscode.Uri.file(filePath), new vscode.Position(i, character));
                 }
             }
+            
             // Scan for includes
             for (let i = 0; i < lines.length; i++) {
                 const includeMatch = lines[i].match(/^\s*include\s+["']?([^"'\s]+)["']?/i);
@@ -59,6 +67,7 @@ export class M68kDefinitionProvider implements vscode.DefinitionProvider {
             }
             return null;
         };
+        
         return findLabelDefinitionRecursive(mainFilePath, baseDir, word);
     }
 }

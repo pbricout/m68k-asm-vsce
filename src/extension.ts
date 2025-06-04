@@ -5,19 +5,28 @@ import { M68kRenameProvider } from './renameProvider';
 import { M68kHoverProvider } from './hoverProvider';
 import { M68kDocumentSymbolProvider } from './symbolProvider';
 import { setConfigPath, loadConfig, watchConfig } from './config';
+import { M68kLogger } from './logger';
 import * as path from 'path';
 import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
+    M68kLogger.log('Extension activating...');
+    
     // Setup config path and load config once at startup
     const wsFolders = vscode.workspace.workspaceFolders;
     const projectRoot = wsFolders && wsFolders.length > 0 ? wsFolders[0].uri.fsPath : process.cwd();
+    M68kLogger.log(`Project root determined as: ${projectRoot}`);
+    
     setConfigPath(projectRoot);
     loadConfig();
+    
     // Watch for config file changes and reload
     watchConfig(() => {
+        M68kLogger.log('Config file changed - reloading extension configuration');
         vscode.window.showInformationMessage('M68K Assembly config reloaded from m68kasmconfig.json');
     });
+
+    M68kLogger.log('Registering language providers...');
 
     const selector: vscode.DocumentSelector = { language: 'm68k-asm', scheme: 'file' };
 
@@ -49,20 +58,21 @@ export function activate(context: vscode.ExtensionContext) {
     // Register folding range provider for custom folding
     context.subscriptions.push(
         vscode.languages.registerFoldingRangeProvider(selector, new M68kFoldingProvider())
-    );
-
-    // Register restart language server command
+    );    // Register restart language server command
     context.subscriptions.push(
         vscode.commands.registerCommand('m68kAsm.restartLanguageServer', () => {
+            M68kLogger.log('Restart command executed');
             vscode.window.showInformationMessage('Restarting M68K Assembly extension (reloading window)...');
             vscode.commands.executeCommand('workbench.action.reloadWindow');
         })
     );
 
-    console.log('M68K Assembly extension activated');
+    M68kLogger.logSuccess('Extension activated successfully');
 }
 
-export function deactivate() {}
+export function deactivate() {
+    M68kLogger.log('Extension deactivated');
+}
 
 class M68kFoldingProvider implements vscode.FoldingRangeProvider {
     provideFoldingRanges(document: vscode.TextDocument): vscode.FoldingRange[] {
