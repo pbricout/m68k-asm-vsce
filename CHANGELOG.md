@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.9](https://github.com/pbricout/m68k-assembly/compare/v1.8.8...v1.8.9) (2025-06-04)
+
+
+### Features
+
+* add incbin directive tests to test suite ([962c2b1](https://github.com/pbricout/m68k-assembly/commit/962c2b127adbdd5ddc52908b731149b52227ee11))
+
 ### [1.8.8](https://github.com/pbricout/m68k-assembly/compare/v1.8.7...v1.8.8) (2025-06-04)
 
 
