@@ -242,12 +242,33 @@
           ]
         }
       ]
-    },
-    "directives": {
+    },    "directives": {
       "patterns": [
         {
+          "name": "meta.directive.include.m68k-asm",
+          "begin": "\\b(?i)(include)\\b",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.directive.include.m68k-asm" }
+          },
+          "end": "$",
+          "patterns": [
+            {
+              "name": "string.quoted.double.m68k-asm",
+              "match": "\"([^\"]+)\""
+            },
+            {
+              "name": "string.quoted.single.m68k-asm", 
+              "match": "'([^']+)'"
+            },
+            {
+              "name": "string.unquoted.include.path.m68k-asm",
+              "match": "\\s+([^\\s;]+)"
+            }
+          ]
+        },
+        {
           "name": "meta.directive.m68k-asm",
-          "begin": "\\b(?i)(include|macro|endm|if|else|endif|section|text|data|bss)\\b",
+          "begin": "\\b(?i)(macro|endm|if|else|endif|section|text|data|bss)\\b",
           "beginCaptures": {
             "1": { "name": "keyword.control.directive.begin.m68k-asm" }
           },
