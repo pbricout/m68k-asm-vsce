@@ -2,7 +2,7 @@
   "name": "m68k-assembly",
   "displayName": "M68K Assembly Language Support",
   "description": "Complete M68K assembly language support with syntax highlighting, IntelliSense, and navigation features",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "license": "MIT",
   "engines": {
     "vscode": "^1.74.0"

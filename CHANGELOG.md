@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.6](https://github.com/pbricout/m68k-assembly/compare/v1.8.5...v1.8.6) (2025-06-04)
+
+
+### Bug Fixes
+
+* **definition:** fix include navigation and remove instruction table duplication ([caa125b](https://github.com/pbricout/m68k-assembly/commit/caa125b45987e4ff55ef1f96c435773986aa9af2))
+
 ### [1.8.5](https://github.com/pbricout/m68k-assembly/compare/v1.8.4...v1.8.5) (2025-06-04)
 
 
