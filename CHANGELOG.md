@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.7](https://github.com/pbricout/m68k-assembly/compare/v1.8.6...v1.8.7) (2025-06-04)
+
+
+### Bug Fixes
+
+* **include:** fix fallback path resolution in createParseContext ([cb7b295](https://github.com/pbricout/m68k-assembly/commit/cb7b29506c5a9100f7a36923fb5f12829fe459d6))
+
 ### [1.8.6](https://github.com/pbricout/m68k-assembly/compare/v1.8.5...v1.8.6) (2025-06-04)
 
 
