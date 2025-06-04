@@ -2,7 +2,7 @@
   "name": "m68k-assembly",
   "displayName": "M68K Assembly Language Support",
   "description": "Complete M68K assembly language support with syntax highlighting, IntelliSense, and navigation features",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "license": "MIT",
   "engines": {
     "vscode": "^1.74.0"
@@ -45,7 +45,8 @@
         "scopeName": "source.m68k-asm",
         "path": "./syntaxes/m68k-asm.tmLanguage.json"
       }
-    ],    "commands": [
+    ],
+    "commands": [
       {
         "command": "m68kAsm.restartLanguageServer",
         "title": "M68K Assembly: Restart Language Server",

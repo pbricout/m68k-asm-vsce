@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/pbricout/m68k-assembly/compare/v1.2.0...v1.3.0) (2025-06-04)
+
+
+### Features
+
+* enhance logger to use VS Code output channel ([42d8264](https://github.com/pbricout/m68k-assembly/commit/42d8264f57babb24656be91ad35747fdd0e11ee5))
+
 ## [1.2.0](https://github.com/pbricout/m68k-assembly/compare/v1.1.3...v1.2.0) (2025-06-04)
 
 
