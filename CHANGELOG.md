@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.5](https://github.com/pbricout/m68k-assembly/compare/v1.8.4...v1.8.5) (2025-06-04)
+
+
+### Bug Fixes
+
+* comprehensive bug fixes and enhancements for M68K assembly extension ([ab7517c](https://github.com/pbricout/m68k-assembly/commit/ab7517c8054f66338f57190521c0c76b0443ff9e))
+
 ### [1.8.4](https://github.com/pbricout/m68k-assembly/compare/v1.8.3...v1.8.4) (2025-06-04)
 
 ### [1.8.3](https://github.com/pbricout/m68k-assembly/compare/v1.8.2...v1.8.3) (2025-06-04)
